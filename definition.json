@@ -1,0 +1,151 @@
+{
+  "schema": 1,
+  "id": "recital",
+  "name": "Recital",
+  "parameters": [
+    {
+      "id": "vowel",
+      "label": "Vowel",
+      "default": 0.5,
+      "mapping": {
+        "kind": "linear",
+        "minimum": 0,
+        "maximum": 1
+      },
+      "display": "percent"
+    },
+    {
+      "id": "register",
+      "label": "Voice",
+      "default": 0.55,
+      "mapping": {
+        "kind": "enum",
+        "labels": [
+          "Mandy",
+          "Bart",
+          "Zelda",
+          "Pip",
+          "Emily",
+          "Luis",
+          "Mabel",
+          "Rocco",
+          "Tamaki",
+          "Bertram"
+        ]
+      },
+      "display": "enum"
+    },
+    {
+      "id": "ensemble",
+      "label": "Ensemble",
+      "default": 0.45,
+      "mapping": {
+        "kind": "linear",
+        "minimum": 0,
+        "maximum": 1
+      },
+      "display": "percent"
+    },
+    {
+      "id": "breath",
+      "label": "Effort",
+      "default": 0.5,
+      "mapping": {
+        "kind": "linear",
+        "minimum": 0,
+        "maximum": 1
+      },
+      "display": "percent"
+    }
+  ],
+  "presets": {
+    "Mandy": {
+      "vowel": 0.5,
+      "register": 0.05,
+      "ensemble": 0.4,
+      "breath": 0.6
+    },
+    "Bart": {
+      "vowel": 0.5,
+      "register": 0.15,
+      "ensemble": 0.55,
+      "breath": 0.35
+    },
+    "Zelda": {
+      "vowel": 0.65,
+      "ensemble": 0.35,
+      "breath": 0.65,
+      "register": 0.25
+    },
+    "Pip": {
+      "vowel": 0.25,
+      "ensemble": 0.3,
+      "breath": 0.35,
+      "register": 0.35
+    },
+    "Emily": {
+      "vowel": 0.5,
+      "register": 0.45,
+      "ensemble": 0.45,
+      "breath": 0.45
+    },
+    "Luis": {
+      "vowel": 0.5,
+      "register": 0.55,
+      "ensemble": 0.45,
+      "breath": 0.5
+    },
+    "Mabel": {
+      "vowel": 0.5,
+      "ensemble": 0.4,
+      "breath": 0.35,
+      "register": 0.65
+    },
+    "Rocco": {
+      "vowel": 0.25,
+      "ensemble": 0.35,
+      "breath": 0.65,
+      "register": 0.75
+    },
+    "Tamaki": {
+      "vowel": 0.5,
+      "register": 0.85,
+      "ensemble": 0.55,
+      "breath": 0.75
+    },
+    "Bertram": {
+      "vowel": 0.5,
+      "register": 0.95,
+      "ensemble": 0.55,
+      "breath": 0.8
+    },
+    "Low Oo": {
+      "vowel": 0,
+      "register": 0.55,
+      "ensemble": 0.5,
+      "breath": 0.3
+    },
+    "Solo Ah": {
+      "vowel": 0.5,
+      "register": 0.55,
+      "ensemble": 0,
+      "breath": 0.5
+    }
+  },
+  "resources": {
+    "voiceBytes": 16,
+    "voiceAlignment": 4,
+    "voiceCapacity": 256,
+    "sharedBytes": 84368,
+    "outputPeakQ31": 805306368,
+    "display": {
+      "stateBytes": 140,
+      "stateAlignment": 4,
+      "paths": 0,
+      "points": 0,
+      "nodes": 156,
+      "palette": 16,
+      "texts": 0
+    }
+  }
+}

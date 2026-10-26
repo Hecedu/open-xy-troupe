@@ -1,0 +1,10 @@
+{
+  "schema": 1,
+  "kind": "synth",
+  "description": "Ten-character table-based vocal ensemble with bounded rendering and 24 active note states.",
+  "identity": {
+    "engine": 36,
+    "page": 84
+  },
+  "sdk": "1.1"
+}
