@@ -14,13 +14,20 @@ inline opxy::u32 bank_window(unsigned bit) {
     if(shift)value|=bank_words[at+1]<<(32-shift);
     return value;
 }
-// Generated Rice quotients are <=15. Two bounded nibble selections and a
-//16-entry lookup replace a variable-length unary loop.
+const unsigned char bank_byte_zeros[256]={
+    8,0,1,0,2,0,1,0,3,0,1,0,2,0,1,0,4,0,1,0,2,0,1,0,3,0,1,0,2,0,1,0,
+    5,0,1,0,2,0,1,0,3,0,1,0,2,0,1,0,4,0,1,0,2,0,1,0,3,0,1,0,2,0,1,0,
+    6,0,1,0,2,0,1,0,3,0,1,0,2,0,1,0,4,0,1,0,2,0,1,0,3,0,1,0,2,0,1,0,
+    5,0,1,0,2,0,1,0,3,0,1,0,2,0,1,0,4,0,1,0,2,0,1,0,3,0,1,0,2,0,1,0,
+    7,0,1,0,2,0,1,0,3,0,1,0,2,0,1,0,4,0,1,0,2,0,1,0,3,0,1,0,2,0,1,0,
+    5,0,1,0,2,0,1,0,3,0,1,0,2,0,1,0,4,0,1,0,2,0,1,0,3,0,1,0,2,0,1,0,
+    6,0,1,0,2,0,1,0,3,0,1,0,2,0,1,0,4,0,1,0,2,0,1,0,3,0,1,0,2,0,1,0,
+    5,0,1,0,2,0,1,0,3,0,1,0,2,0,1,0,4,0,1,0,2,0,1,0,3,0,1,0,2,0,1,0
+};
+// Exact bounded byte lookup: one conditional for every Rice quotient.
 inline unsigned bank_quotient(opxy::u32 value) {
-    unsigned extra=0;
-    if(!(value&255)){value>>=8;extra=8;}
-    if(!(value&15)){value>>=4;extra+=4;}
-    return extra+bank_prefix_zeros[value&15];
+    const unsigned low=bank_byte_zeros[value&255];
+    return low==8 ? 8+bank_byte_zeros[(value>>8)&255] : low;
 }
 template<unsigned Order>
 inline void bank_decode_block(opxy::u32 descriptor,unsigned start,unsigned count,opxy::i16* output,BankStream* stream) {
@@ -48,8 +55,8 @@ inline void bank_decode_block(opxy::u32 descriptor,unsigned start,unsigned count
         const unsigned quotient=bank_quotient(view);
         const opxy::u32 encoded=(quotient<<k)|((view>>(quotient+1))&mask);
         bit+=quotient+1+k;
-        opxy::i32 delta=static_cast<opxy::i32>(encoded>>1);
-        if(encoded&1)delta=-delta-1;
+        const opxy::i32 magnitude=static_cast<opxy::i32>(encoded>>1);
+        opxy::i32 delta=magnitude ^ -static_cast<opxy::i32>(encoded&1);
         if(Order==4){third+=delta;delta=third;}
         if(Order>=3){second+=delta;delta=second;}
         if(Order>=2){first+=delta;delta=first;}
@@ -89,8 +96,8 @@ inline void bank_decode_linear(opxy::u32 descriptor,unsigned start,unsigned coun
         const unsigned quotient=bank_quotient(view);
         const opxy::u32 encoded=(quotient<<k)|((view>>(quotient+1))&mask);
         bit+=quotient+1+k;
-        opxy::i32 delta=static_cast<opxy::i32>(encoded>>1);
-        if(encoded&1)delta=-delta-1;
+        const opxy::i32 magnitude=static_cast<opxy::i32>(encoded>>1);
+        opxy::i32 delta=magnitude ^ -static_cast<opxy::i32>(encoded&1);
         opxy::i32 dot=0;
         for(unsigned index=0;index<Order;++index)dot+=coefficients[index]*history[Order-1-index];
         const opxy::i32 value=dot/16384+delta;
