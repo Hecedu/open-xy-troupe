@@ -75,6 +75,21 @@ inline i32 sample(const opxy::i16* table,u32 phase){
     const i32 a=table[index],b=table[(index+1)&255];
     return a+(b-a)*static_cast<i32>((phase>>16)&255)/256;
 }
+// Identical steady-table oscillator with block choices specialized once.
+template<bool First, bool Unity>
+inline void steady_oscillator(i32* mixed, const opxy::i16* table, u32& phase,
+                              i32 gain, i32 gain_step, i32 offset,
+                              i32 offset_step, opxy::Pitch pitch) {
+    for (unsigned i=0; i<64; ++i) {
+        gain += gain_step;
+        const i32 value = sample(table, phase);
+        const i32 contribution = Unity ? value : value*gain/32768;
+        offset += offset_step;
+        phase += pitch[i] + static_cast<u32>(offset);
+        if (First) mixed[i] = pitch[i]>bank_pitch[28] ? sample(sine, phase)/4 : contribution;
+        else if (pitch[i]<=bank_pitch[28]) mixed[i] += contribution;
+    }
+}
 inline bool cached_wave(StartupCache* cache,unsigned table,opxy::i16* output){
     if(!cache)return false;
     for(unsigned slot=0;slot<32;++slot)if(cache->tags[slot]==table+1){
@@ -287,7 +302,15 @@ inline void render_sound(RenderVoice& state,opxy::Output output,opxy::Parameters
         i32 singer_gain=gain[s],offset=offsets[s];
         const i32 gain_step=step[s],offset_step=offset_steps[s];
         const bool unity=singer_gain==32768&&gain_step==0;
-        for(unsigned i=0;i<64;++i){
+        if(from && !fading) {
+            if(s==0) {
+                if(unity) steady_oscillator<true,true>(mixed,from,phase,singer_gain,gain_step,offset,offset_step,pitch);
+                else steady_oscillator<true,false>(mixed,from,phase,singer_gain,gain_step,offset,offset_step,pitch);
+            } else {
+                if(unity) steady_oscillator<false,true>(mixed,from,phase,singer_gain,gain_step,offset,offset_step,pitch);
+                else steady_oscillator<false,false>(mixed,from,phase,singer_gain,gain_step,offset,offset_step,pitch);
+            }
+        } else for(unsigned i=0;i<64;++i){
             singer_gain+=gain_step;
             i32 value=from?sample(from,phase):quiet_fundamental(sample(sine,phase));
             if(fading)value=blend15(value,sample(to,phase),static_cast<i32>(state.fade+i)*256);
