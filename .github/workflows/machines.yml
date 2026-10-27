@@ -8,7 +8,7 @@ permissions:
 env:
   # Public OS 1.2.1 staging plus the separate preview-memory and display-reset
   # PRs (#138 and #139). No local SDK modifications or memory overrides.
-  OPEN_XY_REF: e86c6a228e5e6dc50b825d982807af19f51334fc
+  OPEN_XY_REF: 153c826218affa021c34cc00603b5e887362b45d
 jobs:
   machine:
     runs-on: ubuntu-latest

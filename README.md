@@ -37,7 +37,7 @@ Recital source except for the machine identity. Hardware stability and CPU
 measurements for a committed Troupe revision remain pending.
 
 The workflow pins public SDK commit
-[`e86c6a2`](https://github.com/Hecedu/open-xy/commit/e86c6a228e5e6dc50b825d982807af19f51334fc):
+[`153c826`](https://github.com/Hecedu/open-xy/commit/153c826218affa021c34cc00603b5e887362b45d):
 upstream OS 1.2.1 staging `c0e5ab6` plus two separate SDK contributions:
 
 - [Fixed 2 MiB browser memory](https://github.com/etcetc000/open-xy/pull/138),
@@ -65,7 +65,7 @@ as `../open-xy`. For a new SDK checkout:
 
 ```sh
 git clone --branch feature/troupe-sdk-dependencies https://github.com/Hecedu/open-xy.git ../open-xy
-git -C ../open-xy checkout e86c6a228e5e6dc50b825d982807af19f51334fc
+git -C ../open-xy checkout 153c826218affa021c34cc00603b5e887362b45d
 ```
 
 Use an existing checkout only if its revision and working files match that pin.
