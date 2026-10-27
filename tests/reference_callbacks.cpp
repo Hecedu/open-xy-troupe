@@ -3,7 +3,7 @@
 #include <cstdlib>
 #include <algorithm>
 #include <cstring>
-#include "approved_decoder_engine.h"
+#include "frozen/approved_decoder_engine.h"
 static void require(bool ok){if(!ok){std::fputs("FAIL: real callbacks differ from approved 004\n",stderr);std::exit(1);}}
 
 // Historical fingerprints validate the frozen decoder renderer. Current audio

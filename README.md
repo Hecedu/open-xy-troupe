@@ -1,6 +1,6 @@
-# Recital Cast trial
+# Recital Cast cleanup candidate
 
-See [TRIAL.md](TRIAL.md) for the candidate scope, reference binding and validation.
+See [OPTIMIZATION.md](OPTIMIZATION.md) for the optimization scope, exact reference binding and validation. [TRIAL.md](TRIAL.md) retains the original Cast audition notes.
 
 Recital is a vocal ensemble synthesizer for the OP-XY and Open-XY SDK. Ten
 selectable characters sing through a phase-coherent, synthetic vocal wave bank.

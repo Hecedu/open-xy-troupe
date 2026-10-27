@@ -4,7 +4,7 @@
 #include "engine.cpp"
 static void require(bool ok,const char* message){if(!ok){std::fprintf(stderr,"FAIL: %s\n",message);std::exit(1);}}
 static_assert(recital::active_notes==24,"Retain the 24-note renderer");
-static_assert(sizeof(recital::BankStream)==36&&sizeof(recital::Shared)==84368,"Four bounded resume states per note plus fixed startup and prepared caches");
+static_assert(sizeof(recital::BankStream)==36&&sizeof(recital::Shared)==82448,"Four bounded resume states per note plus fixed startup and prepared caches");
 int main(){
     using namespace recital;
     int previous=-1;

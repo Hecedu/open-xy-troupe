@@ -1,0 +1,37 @@
+{
+  "core.h": {
+    "original": "core.h",
+    "sha256": "1af0c38bbcaf2aedcb9051d694792f8b2a85b204e657d47444611c1ece7c1d82",
+    "transformed": false
+  },
+  "approved_decoder_engine.h": {
+    "original": "tests/approved_decoder_engine.h",
+    "sha256": "38fe7b1cdefbbaea5bdeed5bbc5a99075f42985d675f50d1866f4a09d6c8168e",
+    "transformed": false
+  },
+  "approved_companion_engine.h": {
+    "original": "tests/approved_companion_engine.h",
+    "sha256": "e61c119c24decb4ea2084cb1856543fced5d910be75471e1907c0351cad5d276",
+    "transformed": false
+  },
+  "approved_display.h": {
+    "original": "tests/approved_display.h",
+    "sha256": "eaed48d3b6240293cfd16c6f8803fed48ee10a5c7956e4d6603d3e1f73f033cb",
+    "transformed": false
+  },
+  "cast_core.h": {
+    "original": "core.h",
+    "sha256": "1af0c38bbcaf2aedcb9051d694792f8b2a85b204e657d47444611c1ece7c1d82",
+    "transformed": true
+  },
+  "cast_engine.h": {
+    "original": "engine.cpp",
+    "sha256": "be96deb649a5b379fcd30cb295cb4dd1bc665a7fe9a067a747cac1145f349875",
+    "transformed": true
+  },
+  "cast_display.h": {
+    "original": "display.cpp",
+    "sha256": "866cdc0b26740bd98cd61fe115106bdae661809d2f24bc71e545ace1b12da062",
+    "transformed": true
+  }
+}

@@ -4,8 +4,8 @@
 #include <climits>
 #include <cstring>
 #include <algorithm>
-#include "approved_decoder_engine.h"
-#include "approved_display.h"
+#include "frozen/approved_decoder_engine.h"
+#include "frozen/approved_display.h"
 
 static void require(bool ok,const char* message) {
     if(!ok){std::fprintf(stderr,"FAIL: %s\n",message);std::exit(1);}

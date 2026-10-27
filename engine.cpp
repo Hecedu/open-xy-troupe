@@ -56,14 +56,12 @@ inline void lead_bank_slice(const WaveKey& key,unsigned start,opxy::i16* output,
     for(unsigned i=0;i<16;++i)
         output[i]=static_cast<opxy::i16>(output[i]+(work[i]-output[i])*static_cast<i32>(key.pitch_mix)/256);
 }
-// The lead is decoded with its approved bounded schedule. The pre-authored
-// phase-compatible cast uses immutable direct lookup, never extra oscillators.
-inline void bank_slice(const WaveKey& key,unsigned start,opxy::i16* output,BankStream* streams){
-    WaveKey lead=key;lead.type&=255;
-    lead_bank_slice(lead,start,output,streams);
+// Full Cast reads its exact authored mixture directly. At intermediate amounts,
+// retain the approved lead decoding, interpolation and integer blend order.
+template<bool Full>
+inline void cast_bank_slice(const WaveKey& key,unsigned start,opxy::i16* output){
     const i32 amount=static_cast<i32>(key.type>>8)*128;
-    if(!amount)return;
-    const unsigned base=raw_table(lead);
+    const unsigned base=raw_table(key);
     for(unsigned i=0;i<16;++i){
         const unsigned at=start+i;
         i32 a=cast_sample(base,at);
@@ -73,23 +71,30 @@ inline void bank_slice(const WaveKey& key,unsigned start,opxy::i16* output,BankS
             if(key.vowel_mix)b=blend15(b,cast_sample(base+5+(key.vowel<4?1:0),at),key.vowel_mix);
             a+=(b-a)*static_cast<i32>(key.pitch_mix)/256;
         }
-        output[i]=static_cast<opxy::i16>(blend15(output[i],a,amount));
+        output[i]=static_cast<opxy::i16>(Full?a:blend15(output[i],a,amount));
     }
+}
+inline void bank_slice(const WaveKey& key,unsigned start,opxy::i16* output,BankStream* streams){
+    if((key.type>>8)==256){cast_bank_slice<true>(key,start,output);return;}
+    WaveKey lead=key;lead.type&=255;
+    lead_bank_slice(lead,start,output,streams);
+    if(key.type>>8)cast_bank_slice<false>(key,start,output);
 }
 inline void begin_sound(RenderVoice& state,u32 owner){
     state.random=0x91e10da5u^(owner*0x9e3779b9u);if(!state.random)state.random=1;
-    for(unsigned s=0;s<3;++s){state.phase[s]=random_word(state.random);state.gains[s]=0;}
+    state.phase[0]=random_word(state.random);state.gains[0]=0;
+    // Preserve the two removed phase draws before the lead's expression draws.
+    random_word(state.random);random_word(state.random);
     state.initialized=state.building=state.cursor=state.fade=state.age=state.cached_build=0;
-    state.active=2;state.lowpass=state.effort=state.ensemble=0;
+    state.active=2;state.lowpass=state.effort=0;
     state.attack_phase=state.attack_step=state.vibrato_wait=state.vibrato_envelope=state.vibrato_fade_step=0;
-    state.vibrato_depth=0;
-    state.air_low=state.air_floor=state.air_gain=0;
-    state.entry_mask=0;
-    for(unsigned s=0;s<2;++s){state.entry_phase[s]=state.entry_wait[s]=state.entry_step[s]=0;}
-    for(unsigned s=0;s<3;++s){
-        state.vibrato_phase[s]=random_word(state.random);
-        state.drift_wait[s]=128+(random_word(state.random)&255);
-        state.drift[s]=state.drift_target[s]=state.pitch_offset[s]=0;
+    state.vibrato_depth=0;state.air_low=state.air_floor=state.air_gain=0;
+    state.vibrato_phase[0]=random_word(state.random);
+    state.drift_wait[0]=128+(random_word(state.random)&255);
+    state.drift[0]=state.drift_target[0]=state.pitch_offset[0]=0;
+    for(unsigned j=0;j<2;++j){
+        random_word(state.random); // Removed companion vibrato-phase seed.
+        state.companion_drift_wait[j]=128+(random_word(state.random)&255);
     }
 }
 inline i32 sample(const opxy::i16* table,u32 phase){
@@ -97,25 +102,18 @@ inline i32 sample(const opxy::i16* table,u32 phase){
     const i32 a=table[index],b=table[(index+1)&255];
     return a+(b-a)*static_cast<i32>((phase>>16)&255)/256;
 }
-// Lead lookup remains linearly interpolated. Companions round the phase to
-// the nearest table sample; unsigned addition wraps safely at the last entry.
-template<bool Lead>
-inline i32 singer_sample(const opxy::i16* table,u32 phase){
-    return Lead ? sample(table,phase) : table[(phase+0x00800000u)>>24];
-}
 // Identical steady-table oscillator with block choices specialized once.
-template<bool First, bool Unity>
+template<bool Unity>
 inline void steady_oscillator(i32* mixed, const opxy::i16* table, u32& phase,
                               i32 gain, i32 gain_step, i32 offset,
                               i32 offset_step, opxy::Pitch pitch) {
     for (unsigned i=0; i<64; ++i) {
         gain += gain_step;
-        const i32 value = singer_sample<First>(table, phase);
+        const i32 value = sample(table, phase);
         const i32 contribution = Unity ? value : value*gain/32768;
         offset += offset_step;
         phase += pitch[i] + static_cast<u32>(offset);
-        if (First) mixed[i] = pitch[i]>bank_pitch[28] ? sample(sine, phase)/4 : contribution;
-        else if (pitch[i]<=bank_pitch[28]) mixed[i] += contribution;
+        mixed[i] = pitch[i]>bank_pitch[28] ? sample(sine, phase)/4 : contribution;
     }
 }
 inline bool cached_wave(StartupCache* cache,unsigned table,opxy::i16* output){
@@ -158,21 +156,18 @@ inline i32 quiet_fundamental(i32 value){
     const i32 tenth=(magnitude*26215)/262144;
     return value<0?-tenth:tenth;
 }
-// Choose the lead/companion lookup once per stream, including both sides
-// of a crossfade. Preserve the original quiet startup and upper fallback.
-template<bool First>
+// Preserve the approved linear crossfade, quiet startup and upper fallback.
 inline void transition_oscillator(i32* mixed,const opxy::i16* from,const opxy::i16* to,u32& phase,
                                  i32 gain,i32 gain_step,i32 offset,i32 offset_step,opxy::Pitch pitch,
                                  bool fading,u32 fade,bool unity){
     for(unsigned i=0;i<64;++i){
         gain+=gain_step;
-        i32 value=from?singer_sample<First>(from,phase):quiet_fundamental(sample(sine,phase));
-        if(fading)value=blend15(value,singer_sample<First>(to,phase),static_cast<i32>(fade+i)*256);
+        i32 value=from?sample(from,phase):quiet_fundamental(sample(sine,phase));
+        if(fading)value=blend15(value,sample(to,phase),static_cast<i32>(fade+i)*256);
         const i32 contribution=unity?value:value*gain/32768;
         offset+=offset_step;
         phase+=pitch[i]+static_cast<u32>(offset);
-        if(First)mixed[i]=pitch[i]>bank_pitch[28]?sample(sine,phase)/4:contribution;
-        else if(pitch[i]<=bank_pitch[28])mixed[i]+=contribution;
+        mixed[i]=pitch[i]>bank_pitch[28]?sample(sine,phase)/4:contribution;
     }
 }
 // A cold cache miss resumes only 64 source samples per callback. A quiet
@@ -213,25 +208,6 @@ inline i32 attack_curve(u32 phase){
     const i32 t=static_cast<i32>(phase);
     return (t*t/32768)*(98304-2*t)/32768;
 }
-// Only two companions, updated once per block. Their effective weights join
-// the existing normalization, so a waiting singer cannot duck the soloist.
-inline void entrance_weights(RenderVoice& state,i32* weights,const CharacterExpression& character,u32 owner_seed){
-    for(unsigned s=1;s<3;++s){
-        const unsigned j=s-1,bit=1u<<j;
-        if(!weights[s]&&!state.gains[s]){
-            state.entry_mask&=~bit;state.entry_phase[j]=0;continue;
-        }
-        if(!(state.entry_mask&bit)){
-            state.entry_mask|=bit;state.entry_phase[j]=0;
-            // 6-10 ms and 15-19 ms; independent of the audio PRNG sequence.
-            state.entry_wait[j]=(s==1?4u:10u)+((owner_seed>>(j*3))&3u);
-            state.entry_step[j]=character.attack_step;
-        }
-        if(state.entry_wait[j])--state.entry_wait[j];
-        else state.entry_phase[j]=static_cast<u32>(bound(static_cast<i32>(state.entry_phase[j]+state.entry_step[j]),0,32768));
-        weights[s]=weights[s]*attack_curve(state.entry_phase[j])/32768;
-    }
-}
 inline i32 air_envelope(u32 phase){
     const i32 lead=attack_curve(phase<8192?phase*4:32768);
     return lead*(49152-attack_curve(phase)/2)/32768;
@@ -240,25 +216,31 @@ inline i32 air_envelope(u32 phase){
 inline i32 pitch_delta(u32 pitch,i32 tuning){
     return static_cast<i32>(pitch>>16)*tuning+static_cast<i32>(pitch&65535)*tuning/65536;
 }
-// A fixed three-singer control update. The audio loop only ramps increments;
-// no audio-rate LFO, random drift generation or software-wide arithmetic.
-inline void update_expression(RenderVoice& state,const CharacterExpression& character,i32* targets){
+// Only the audible lead needs drift smoothing, vibrato lookup and tuning.
+// Keep the removed companions' random draw times so lead drift and aspiration
+// remain sample-exact, including long notes and interrupted control changes.
+inline i32 update_expression(RenderVoice& state,const CharacterExpression& character){
     if(state.vibrato_wait)--state.vibrato_wait;
     else state.vibrato_envelope=static_cast<u32>(bound(static_cast<i32>(state.vibrato_envelope+state.vibrato_fade_step),0,32768));
     state.vibrato_depth+=(character.vibrato_depth-state.vibrato_depth)/8;
     const i32 depth=state.vibrato_depth*static_cast<i32>(state.vibrato_envelope)/32768;
-    const u32 rates[3]={character.vibrato_rate,character.vibrato_rate+(character.vibrato_rate>>5),character.vibrato_rate-(character.vibrato_rate>>6)};
-    for(unsigned s=0;s<3;++s){
-        if(state.drift_wait[s])--state.drift_wait[s];
-        else{
-            state.drift_target[s]=(static_cast<i32>(random_word(state.random)&127)-64)*256;
-            state.drift_wait[s]=256+(random_word(state.random)&255);
-        }
-        state.drift[s]+=(state.drift_target[s]-state.drift[s])/128;
-        const i32 vibrato=depth?sample(sine,state.vibrato_phase[s])*depth/32768:0;
-        targets[s]=(s==0?0:s==1?-600:600)+vibrato+state.drift[s]/256;
-        state.vibrato_phase[s]+=rates[s];
+    if(state.drift_wait[0])--state.drift_wait[0];
+    else{
+        state.drift_target[0]=(static_cast<i32>(random_word(state.random)&127)-64)*256;
+        state.drift_wait[0]=256+(random_word(state.random)&255);
     }
+    state.drift[0]+=(state.drift_target[0]-state.drift[0])/128;
+    const i32 vibrato=depth?sample(sine,state.vibrato_phase[0])*depth/32768:0;
+    const i32 target=vibrato+state.drift[0]/256;
+    state.vibrato_phase[0]+=character.vibrato_rate;
+    for(unsigned j=0;j<2;++j){
+        if(state.companion_drift_wait[j])--state.companion_drift_wait[j];
+        else{
+            random_word(state.random); // Removed companion drift target.
+            state.companion_drift_wait[j]=256+(random_word(state.random)&255);
+        }
+    }
+    return target;
 }
 // Completed onsets and unchanged output level are common in release tails.
 // Select that exact identity case once per block, keeping its sample loop
@@ -301,18 +283,7 @@ inline void render_sound(RenderVoice& state,opxy::Output output,opxy::Parameters
     const opxy::i16* to=state.tables[destination];
     const bool fading=state.fade!=0;
     const i32 previous_effort=state.effort;
-    const i32 target_ensemble=effort_value(parameters[2]);
-    state.ensemble+=(target_ensemble-state.ensemble)/4;
-    if(target_ensemble==0&&state.ensemble<4)state.ensemble=0;
-    // Both trial controls render one periodic stream per played note.
-    i32 weight[3]={32768,0,0};
-    entrance_weights(state,weight,character,state.phase[0] ^ state.vibrato_phase[0]);
-    const i32 total=weight[0]+weight[1]+weight[2];
-    i32 goal[3],step[3],gain[3];
-    for(unsigned s=0;s<3;++s){
-        goal[s]=total==32768?weight[s]:weight[s]?weight[s]*32768/total:0;
-        gain[s]=state.gains[s];step[s]=(goal[s]-gain[s])/64;
-    }
+    const i32 gain=state.gains[0],gain_step=(32768-gain)/64;
     state.effort+=(effort_value(parameters[3])-state.effort)/8;
     // Keep the authored Effort response while preventing its fixed low-pass
     // corner from swallowing upper-register fundamentals. Unity is stable.
@@ -325,50 +296,28 @@ inline void render_sound(RenderVoice& state,opxy::Output output,opxy::Parameters
     const i32 level=46341;
     const i32 volume_goal=(26000+state.effort/4)*level/32768;
     const i32 volume_start=(26000+previous_effort/4)*46341/32768;
-    const unsigned singers=1;
-    i32 tuning[3],offsets[3],offset_steps[3],offset_goals[3];
-    update_expression(state,character,tuning);
-    for(unsigned s=0;s<3;++s){
-        offset_goals[s]=pitch_delta(pitch[0],tuning[s]);
-        offsets[s]=fresh?offset_goals[s]:state.pitch_offset[s];
-        offset_steps[s]=(offset_goals[s]-offsets[s])/64;
-    }
+    const i32 offset_goal=pitch_delta(pitch[0],update_expression(state,character));
+    const i32 offset=fresh?offset_goal:state.pitch_offset[0];
+    const i32 offset_step=(offset_goal-offset)/64;
     const u32 next_attack=static_cast<u32>(bound(static_cast<i32>(state.attack_phase+state.attack_step),0,32768));
     i32 onset=attack_curve(state.attack_phase);
     const i32 onset_step=(attack_curve(next_attack)-onset)/64;
     i32 breath_onset=air_envelope(state.attack_phase);
     const i32 breath_step=(air_envelope(next_attack)-breath_onset)/64;
-    // Each singer's sample stream is independent within this callback.
-    // Complete one stream at a time so phase, gain and tuning stay local;
-    // accumulate in the same singer order for every destination sample.
     i32 mixed[64];
-    for(unsigned s=0;s<singers;++s){
-        u32 phase=state.phase[s];
-        i32 singer_gain=gain[s],offset=offsets[s];
-        const i32 gain_step=step[s],offset_step=offset_steps[s];
-        const bool unity=singer_gain==32768&&gain_step==0;
-        if(from && !fading) {
-            if(s==0) {
-                if(unity) steady_oscillator<true,true>(mixed,from,phase,singer_gain,gain_step,offset,offset_step,pitch);
-                else steady_oscillator<true,false>(mixed,from,phase,singer_gain,gain_step,offset,offset_step,pitch);
-            } else {
-                if(unity) steady_oscillator<false,true>(mixed,from,phase,singer_gain,gain_step,offset,offset_step,pitch);
-                else steady_oscillator<false,false>(mixed,from,phase,singer_gain,gain_step,offset,offset_step,pitch);
-            }
-        } else if(s==0) {
-            transition_oscillator<true>(mixed,from,to,phase,singer_gain,gain_step,offset,offset_step,pitch,fading,state.fade,unity);
-        } else {
-            transition_oscillator<false>(mixed,from,to,phase,singer_gain,gain_step,offset,offset_step,pitch,fading,state.fade,unity);
-        }
-        state.phase[s]=phase;
-    }
+    u32 phase=state.phase[0];
+    const bool unity=gain==32768&&gain_step==0;
+    if(from&&!fading){
+        if(unity)steady_oscillator<true>(mixed,from,phase,gain,gain_step,offset,offset_step,pitch);
+        else steady_oscillator<false>(mixed,from,phase,gain,gain_step,offset,offset_step,pitch);
+    }else transition_oscillator(mixed,from,to,phase,gain,gain_step,offset,offset_step,pitch,fading,state.fade,unity);
+    state.phase[0]=phase;
     if(state.attack_phase==32768&&volume_start==volume_goal)
         output_pass<true>(state,output,pitch,mixed,brightness,air,volume_start,volume_goal,onset,onset_step,breath_onset,breath_step);
     else output_pass<false>(state,output,pitch,mixed,brightness,air,volume_start,volume_goal,onset,onset_step,breath_onset,breath_step);
     state.attack_phase=next_attack;
     if(state.age<0x7fffffbfu)state.age+=64;
-    for(unsigned s=0;s<3;++s)state.pitch_offset[s]=offset_goals[s];
-    for(unsigned s=0;s<3;++s)state.gains[s]=goal[s];
+    state.pitch_offset[0]=offset_goal;state.gains[0]=32768;
     if(fading){
         state.fade+=64;
         if(state.fade>=129){state.active=destination;state.current=state.target;state.fade=0;}

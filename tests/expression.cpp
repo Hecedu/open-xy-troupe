@@ -40,7 +40,7 @@ int main(){
         double maximum=0,previous=0;unsigned crossings=0;
         for(unsigned block=0;block<2048;++block){
             // Suppress drift in this fixture to measure vibrato independently.
-            for(unsigned s=0;s<3;++s)note.drift_wait[s]=100000;
+            note.drift_wait[0]=100000;
             const unsigned before=note.phase[0];recital::render_sound(note,out,p,pitch);
             const double cents=measured_cents(before,note.phase[0],pitch[0]);
             if(block<minimum_delay[type])require(std::abs(cents)<.0001,"Vibrato begins after the character's delay");

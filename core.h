@@ -4,21 +4,21 @@
 #include "voice_types.h"
 #include "bank_stream.h"
 namespace recital {
-const unsigned max_singers=3, active_notes=24;
+const unsigned max_singers=1, active_notes=24;
 // No pointers in persistent state: identical layout in native and browser builds.
 struct WaveKey { opxy::u32 type, pitch, pitch_mix, vowel, vowel_mix; };
 struct RenderVoice {
     opxy::i16 tables[2][256];
     WaveKey current, target;
     BankStream decoding[4];
-    opxy::u32 phase[3], random, initialized, active, building, cursor, fade, age, cached_build;
-    opxy::i32 gains[3], lowpass, effort, ensemble;
-    opxy::u32 vibrato_phase[3], drift_wait[3];
-    opxy::i32 drift[3], drift_target[3], pitch_offset[3];
+    opxy::u32 phase[1], random, initialized, active, building, cursor, fade, age, cached_build;
+    opxy::i32 gains[1], lowpass, effort;
+    // Two dormant companion timers retain the approved shared PRNG schedule.
+    opxy::u32 vibrato_phase[1], drift_wait[1], companion_drift_wait[2];
+    opxy::i32 drift[1], drift_target[1], pitch_offset[1];
     opxy::u32 attack_phase, attack_step, vibrato_wait, vibrato_envelope, vibrato_fade_step;
     opxy::i32 vibrato_depth;
     opxy::i32 air_low, air_floor, air_gain;
-    opxy::u32 entry_phase[2], entry_wait[2], entry_step[2], entry_mask;
 };
 // Per-stock-handle continuity survives eviction from the shared render pool.
 // Samples are stored in the engine's i16 output units, never as a pointer to

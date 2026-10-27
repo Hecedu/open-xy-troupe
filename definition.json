@@ -136,7 +136,7 @@
     "voiceBytes": 16,
     "voiceAlignment": 4,
     "voiceCapacity": 256,
-    "sharedBytes": 84368,
+    "sharedBytes": 82448,
     "outputPeakQ31": 805306368,
     "display": {
       "stateBytes": 140,

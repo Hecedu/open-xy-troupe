@@ -37,7 +37,7 @@ def main():
     with tempfile.TemporaryDirectory(prefix='recital-trial-oracle-') as scratch:
         scratch=Path(scratch)
         candidate=compile_run(scratch,'candidate','#include "engine.cpp"\n'+WORKLOAD)
-        approved=compile_run(scratch,'approved','#include "approved_companion_engine.h"\n'+WORKLOAD)
+        approved=compile_run(scratch,'approved','#include "frozen/approved_companion_engine.h"\n'+WORKLOAD)
         rows=[list(map(int,row.split())) for row in candidate.decode().splitlines()]
         prior=[list(map(int,row.split())) for row in approved.decode().splitlines()]
         assert len(set(row[0] for row in rows))==3,'Knob amounts must produce different sound'

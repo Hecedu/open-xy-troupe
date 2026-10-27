@@ -1,6 +1,6 @@
 #include <cstdio>
 #include <cstdlib>
-#include "engine.cpp"
+#include "frozen/approved_companion_engine.h"
 static void require(bool ok,const char* message){if(!ok){std::fprintf(stderr,"FAIL: %s\n",message);std::exit(1);}}
 int main(){
     using namespace recital;

@@ -12,7 +12,6 @@ int main(){
     unsigned long samples=0;bool varied_pitch=false;
     for(unsigned type=0;type<10;++type)for(unsigned vowel=0;vowel<5;++vowel)for(unsigned amount=0;amount<3;++amount){
         RenderVoice state={},repeat={};begin_sound(state,17);begin_sound(repeat,17);
-        const unsigned companion1=state.phase[1],companion2=state.phase[2];
         p[0]=static_cast<int>(vowel*2147483647LL/4);
         p[1]=static_cast<int>((2*type+1)*2147483647LL/20);
         p[2]=static_cast<int>(amount*2147483647LL/2);p[3]=1073741824;
@@ -21,8 +20,8 @@ int main(){
         for(unsigned block=0;block<1024;++block){
             render_sound(state,out,p,pitch);render_sound(repeat,again,p,pitch);
             require(std::equal(out,out+64,again),"Identical owners and controls remain deterministic");
-            require(state.phase[1]==companion1&&state.phase[2]==companion2,"No companion audio stream advances");
-            require(state.gains[0]==32768&&state.gains[1]==0&&state.gains[2]==0,"Exactly one normalized audio singer");
+            require(max_singers==1,"Exactly one stored audio singer");
+            require(state.gains[0]==32768,"Exactly one normalized audio singer");
             for(int value:out){require(value>=-805306368&&value<=805306368,"Declared output headroom at every voice/vowel/amount");
                 if(block>512){const long long v=value/65536;energy+=v*v;}++samples;}
             if(block>128)require(state.attack_phase==32768,"All expressive onsets finish within bounded time");
