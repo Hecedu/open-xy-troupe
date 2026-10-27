@@ -6,10 +6,9 @@ on:
 permissions:
   contents: read
 env:
-  # Preserved validation dependency; not yet available on the public SDK fork.
-  # README.md tracks the checkout and browser-memory blockers. Do not replace
-  # this pin merely to make CI green without qualifying the replacement SDK.
-  OPEN_XY_REF: 1663f60d21c24bf7feafda28f01cd82efdf008d4
+  # Public OS 1.2.1 staging plus the separate preview-memory and display-reset
+  # PRs (#138 and #139). No local SDK modifications or memory overrides.
+  OPEN_XY_REF: e86c6a228e5e6dc50b825d982807af19f51334fc
 jobs:
   machine:
     runs-on: ubuntu-latest

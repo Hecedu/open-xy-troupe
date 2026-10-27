@@ -31,35 +31,44 @@ formation immediately and removes sway.
 
 This repository is available for source review; it is not a catalog release.
 The Troupe rename passed 13 C++ host tests, six machine-owned Python checks,
-and browser ABI/render smoke checks using the preserved SDK described below.
+and browser ABI/render smoke checks using the public SDK revision below.
 Its controls, presets, authored audio data and animation match the preceding
 Recital source except for the machine identity. Hardware stability and CPU
 measurements for a committed Troupe revision remain pending.
 
-As of October 27, 2026, two SDK dependencies must be resolved before a fresh
-checkout can reproduce the full checks:
+The workflow pins public SDK commit
+[`e86c6a2`](https://github.com/Hecedu/open-xy/commit/e86c6a228e5e6dc50b825d982807af19f51334fc):
+upstream OS 1.2.1 staging `c0e5ab6` plus two separate SDK contributions:
 
-- The workflow pins SDK commit `1663f60d21c24bf7feafda28f01cd82efdf008d4`,
-  based on staging `a1323c8` with a display-activation reset change. That commit
-  is not currently available from `Hecedu/open-xy`, so GitHub Actions cannot
-  check it out. The reset preserves entrances when reopening pages or switching
-  tracks.
-- The validated browser build used a fixed **1 MiB** WebAssembly memory
-  allowance. The pinned SDK defaults to 512 KiB. The allowance was set by the
-  local validation runner; it is not configured by this repository's workflow.
-  Browser integration needs a supported SDK solution before CI can pass.
+- [Fixed 2 MiB browser memory](https://github.com/etcetc000/open-xy/pull/138),
+  with growth disabled. The normal preview and machine-test commands use this
+  allowance directly; no local Python runner or memory override is required.
+- [Display activation reset](https://github.com/etcetc000/open-xy/pull/139),
+  which resets native drawing state when an owned page is selected or its track
+  changes, preserving the page's entrance behavior. This PR remains a draft
+  pending native release qualification.
 
-The preserved SDK targets OS 1.2.0. Current upstream targets OS 1.2.1;
-compatibility with that revision has not been qualified. SDK fixes belong in
-separate SDK pull requests. This repository contains the machine source only.
+Troupe's host/reference checks, browser preview and native module compile pass
+against this OS 1.2.1 SDK. The module occupies 1,016,316 bytes (about 992.5 KiB)
+of the 2040 KiB collection region with the pinned macOS tools. This is a host
+compile result. Full firmware reconstruction, Windows release qualification,
+hardware stability and CPU profiling remain pending. The approved older
+reference and its original SDK are retained separately without modification.
 
 ## Develop and audition
 
 Use Python 3.11+, NumPy 2.3.5, Node 22.12+, a host C++11 compiler, and Clang with
 `wasm-ld` for browser builds. On macOS, Homebrew LLVM supplies a suitable Clang;
 Apple's compiler can run host tests but cannot link the WebAssembly preview.
-Set `OPEN_XY_SDK` to the compatible SDK checkout, normally `../open-xy`.
-Do not substitute another SDK revision when reproducing reference results.
+Use the exact public SDK revision pinned above, normally beside this repository
+as `../open-xy`. For a new SDK checkout:
+
+```sh
+git clone --branch feature/troupe-sdk-dependencies https://github.com/Hecedu/open-xy.git ../open-xy
+git -C ../open-xy checkout e86c6a228e5e6dc50b825d982807af19f51334fc
+```
+
+Use an existing checkout only if its revision and working files match that pin.
 
 Machine-owned data, artwork, native adapter and reference checks:
 
@@ -68,8 +77,8 @@ python -m pip install numpy==2.3.5
 OPEN_XY_SDK=../open-xy python tests/check.py
 ```
 
-Once the SDK dependencies above are resolved, run its complete machine checks
-and build an audition into a fresh directory outside this repository:
+Run the SDK's complete machine checks and build an audition into a fresh
+directory outside this repository:
 
 ```sh
 export OPEN_XY_SDK=../open-xy
