@@ -55,7 +55,8 @@ int main(){
             input.elapsed=tick?17:0;display(state,input,frame);
             require(opxy::draw::valid(frame),"Every entrance, face and silhouette frame is valid");
             for(unsigned s=0;s<5;++s){const auto& node=frame.nodes[face_node+s];
-                if(tick)require(node.y<=previous[s],"Center-out entrance has no bounce");previous[s]=node.y;
+                if(tick)require(node.y<=previous[s],"Center-out entrance has no bounce");
+                previous[s]=node.y;
                 const unsigned body=cast_members[state.selected_type][s];
                 const auto& silhouette=frame.nodes[body_node+s*voice_count+body];
                 require(silhouette.x==node.x&&silhouette.y==node.y&&silhouette.scale==node.scale,"Actual contributing cast silhouettes share the face pose");
