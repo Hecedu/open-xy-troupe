@@ -30,14 +30,19 @@ formation immediately and removes sway.
 ## Develop and audition
 
 Keep an [Open-XY SDK](https://github.com/etcetc000/open-xy) checkout beside this
-repository as `../open-xy`. Use its `staging` development branch and the compatible
-revision pinned by `.github/workflows/machines.yml`. Machine code uses public
-`<opxy/...>` headers; SDK changes belong in separate SDK pull requests.
+repository as `../open-xy`, or set `OPEN_XY_SDK` to another checkout. Use the
+exact revision pinned by [.github/workflows/machines.yml](.github/workflows/machines.yml):
+`1663f60d21c24bf7feafda28f01cd82efdf008d4`, combining staging `a1323c8` with
+our display-activation reset. That reset preserves the entrance when reopening
+a native page or switching tracks; it is not yet in plain upstream staging.
+Machine code uses public `<opxy/...>` headers; SDK changes belong in separate
+SDK pull requests.
 
 ```sh
-python ../open-xy/sdk.py test --machine . --cxx clang++ --host-cxx c++
-python ../open-xy/sdk.py preview --machine . --out ../open-xy/local/recital-preview-001
-python ../open-xy/tools/serve_harness.py --preview ../open-xy/local/recital-preview-001
+export OPEN_XY_SDK=../open-xy  # checkout at the pinned revision above
+python "$OPEN_XY_SDK/sdk.py" test --machine . --cxx clang++ --host-cxx c++
+python "$OPEN_XY_SDK/sdk.py" preview --machine . --out "$OPEN_XY_SDK/local/recital-preview-001"
+python "$OPEN_XY_SDK/tools/serve_harness.py" --preview "$OPEN_XY_SDK/local/recital-preview-001"
 ```
 
 Use Python 3.11+, Node 22.12+, NumPy 2.3.5 and LLVM with `wasm-ld`. On macOS,
@@ -51,7 +56,7 @@ machine-owned Python checks cover spectral quality, exact bank packing,
 reproducible artwork and the generated native voice adapter:
 
 ```sh
-OPEN_XY_SDK=../open-xy python tests/check.py
+python tests/check.py
 ```
 
 Set `CXX` to a host C++11 compiler if needed. The workflow runs these checks on
@@ -68,11 +73,6 @@ and preserves actual numbers; always pass the previous build's `--layout`.
 Recital is a new identity: old `choir` presets, artwork names and project mappings
 do not migrate automatically. Keep existing Choir firmware and its layout for
 older projects.
-
-Native re-entry animation requires the SDK display-activation reset contribution
-prepared alongside this machine. Browser resets and track-change animation are
-implemented through the public display callbacks. Use an SDK containing that
-change to reproduce the complete approved entrance behavior.
 
 Before publishing, commit the machine and follow the SDK's
 [hardware profiling guide](https://github.com/etcetc000/open-xy/blob/staging/docs/profiling.md):

@@ -7,7 +7,7 @@ permissions:
   contents: read
 env:
   # Development follows staging; pin a compatible SDK commit for a release.
-  OPEN_XY_REF: ece78522a26ae18cba3d6308bccb566b906bceb5
+  OPEN_XY_REF: 1663f60d21c24bf7feafda28f01cd82efdf008d4
 jobs:
   machine:
     runs-on: ubuntu-latest
