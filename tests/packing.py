@@ -32,7 +32,7 @@ def main():
         require(hashlib.sha256((FOLDER / name).read_bytes()).hexdigest() == expected,
                 f'Approved source/data preservation: {name}')
     require(json.loads((FOLDER / 'definition.json').read_text()) == contract['definition'],
-            'Controls, presets, resource sizes and Recital identity match the approved contribution')
+            'Controls, presets, resource sizes and Troupe identity match the source contract')
     require(report['packed_bytes'] < report['original_bytes'], 'Real storage reduction')
     print(f"PASS: exact packed regeneration and all table samples; {report['original_bytes']:,} -> "
           f"{report['packed_bytes']:,} bytes; UI, controls, presets, expression and polyphony unchanged; resume-state and fixed startup-cache budget checked.")

@@ -4,7 +4,7 @@
 #include "expression.h"
 #include "cast_bank.h"
 namespace approved_cast {
-using namespace recital;
+using namespace troupe;
 using opxy::u32;
 using opxy::i32;
 inline i32 bound(i32 x,i32 lo,i32 hi){return x<lo?lo:x>hi?hi:x;}
@@ -115,7 +115,7 @@ inline void steady_oscillator(i32* mixed, const opxy::i16* table, u32& phase,
         const i32 contribution = Unity ? value : value*gain/32768;
         offset += offset_step;
         phase += pitch[i] + static_cast<u32>(offset);
-        if (First) mixed[i] = pitch[i]>bank_pitch[28] ? sample(recital::sine, phase)/4 : contribution;
+        if (First) mixed[i] = pitch[i]>bank_pitch[28] ? sample(troupe::sine, phase)/4 : contribution;
         else if (pitch[i]<=bank_pitch[28]) mixed[i] += contribution;
     }
 }
@@ -151,7 +151,7 @@ inline void remember_prepared(PreparedCache* cache,const WaveKey& key,const opxy
     cache->keys[slot]=key;
     if(cache->count<64)++cache->count;
 }
-// Exact signed division by ten for the recital::sine interpolator's [-32767,32767]
+// Exact signed division by ten for the troupe::sine interpolator's [-32767,32767]
 // range. Its positive reciprocal product fits i32. The pinned native compiler
 // otherwise calls software division for every cold-start oscillator sample.
 inline i32 quiet_fundamental(i32 value){
@@ -167,12 +167,12 @@ inline void transition_oscillator(i32* mixed,const opxy::i16* from,const opxy::i
                                  bool fading,u32 fade,bool unity){
     for(unsigned i=0;i<64;++i){
         gain+=gain_step;
-        i32 value=from?singer_sample<First>(from,phase):quiet_fundamental(sample(recital::sine,phase));
+        i32 value=from?singer_sample<First>(from,phase):quiet_fundamental(sample(troupe::sine,phase));
         if(fading)value=blend15(value,singer_sample<First>(to,phase),static_cast<i32>(fade+i)*256);
         const i32 contribution=unity?value:value*gain/32768;
         offset+=offset_step;
         phase+=pitch[i]+static_cast<u32>(offset);
-        if(First)mixed[i]=pitch[i]>bank_pitch[28]?sample(recital::sine,phase)/4:contribution;
+        if(First)mixed[i]=pitch[i]>bank_pitch[28]?sample(troupe::sine,phase)/4:contribution;
         else if(pitch[i]<=bank_pitch[28])mixed[i]+=contribution;
     }
 }
@@ -256,7 +256,7 @@ inline void update_expression(RenderVoice& state,const CharacterExpression& char
             state.drift_wait[s]=256+(random_word(state.random)&255);
         }
         state.drift[s]+=(state.drift_target[s]-state.drift[s])/128;
-        const i32 vibrato=depth?sample(recital::sine,state.vibrato_phase[s])*depth/32768:0;
+        const i32 vibrato=depth?sample(troupe::sine,state.vibrato_phase[s])*depth/32768:0;
         targets[s]=(s==0?0:s==1?-600:600)+vibrato+state.drift[s]/256;
         state.vibrato_phase[s]+=rates[s];
     }

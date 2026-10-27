@@ -1,6 +1,6 @@
 #pragma once
 #include <opxy/audio.hpp>
-namespace recital {
+namespace troupe {
 struct CharacterExpression {
     opxy::u32 attack_step, vibrato_delay, vibrato_fade_step, vibrato_rate;
     opxy::i32 vibrato_depth;

@@ -17,11 +17,11 @@ int main(){
     int p[8]={},out[64],reference[64];unsigned pitch[64];unsigned attack90[10]={},drift_hashes[24]={};
     std::fill(pitch,pitch+64,510000000u); // Fundamental-only range isolates attacks.
     for(unsigned type=0;type<10;++type){
-        recital::RenderVoice note={},full={};recital::begin_sound(note,1);recital::begin_sound(full,1);
+        troupe::RenderVoice note={},full={};troupe::begin_sound(note,1);troupe::begin_sound(full,1);
         full.attack_phase=32768;controls(p,type);
         bool crossed=false;
         for(unsigned block=0;block<100;++block){
-            recital::render_sound(note,out,p,pitch);recital::render_sound(full,reference,p,pitch);
+            troupe::render_sound(note,out,p,pitch);troupe::render_sound(full,reference,p,pitch);
             const double ratio=energy(out)/energy(reference);
             require(ratio>=0&&ratio<1.001,"Attack gain remains bounded");
             if(block<2)require(ratio<.1,"Soft, click-free note entrance");
@@ -29,19 +29,19 @@ int main(){
         }
         require(crossed,"Every character reaches its full voice");
         // Changing character on a held note must not restart the entrance.
-        for(unsigned next=0;next<10;++next){controls(p,next);recital::render_sound(note,out,p,pitch);require(note.attack_phase==32768&&energy(out)>1e6,"Held character selection retains the completed onset");}
+        for(unsigned next=0;next<10;++next){controls(p,next);troupe::render_sound(note,out,p,pitch);require(note.attack_phase==32768&&energy(out)>1e6,"Held character selection retains the completed onset");}
     }
     require(attack90[5]<attack90[0]&&attack90[0]<attack90[1]&&attack90[1]<attack90[3]&&attack90[3]<attack90[2]&&attack90[2]<attack90[4],"Audible character-specific attack ordering");
     std::fill(pitch,pitch+64,42852281u); // A4.
     const double depth_cents[10]={1.06,7.4,4.23,18.5,22.5,3.17,10.04,2.64,4.75,.66};
     const unsigned minimum_delay[10]={550,294,343,102,136,481,378,448,308,598};
     for(unsigned type=0;type<10;++type){
-        recital::RenderVoice note={};recital::begin_sound(note,1);controls(p,type);
+        troupe::RenderVoice note={};troupe::begin_sound(note,1);controls(p,type);
         double maximum=0,previous=0;unsigned crossings=0;
         for(unsigned block=0;block<2048;++block){
             // Suppress drift in this fixture to measure vibrato independently.
             note.drift_wait[0]=100000;
-            const unsigned before=note.phase[0];recital::render_sound(note,out,p,pitch);
+            const unsigned before=note.phase[0];troupe::render_sound(note,out,p,pitch);
             const double cents=measured_cents(before,note.phase[0],pitch[0]);
             if(block<minimum_delay[type])require(std::abs(cents)<.0001,"Vibrato begins after the character's delay");
             maximum=std::max(maximum,std::abs(cents));
@@ -52,11 +52,11 @@ int main(){
         require(crossings>=6&&crossings<=9,"Measured vibrato rate remains vocal and bounded");
     }
     for(unsigned owner=1;owner<=24;++owner){
-        recital::RenderVoice note={},repeat={};recital::begin_sound(note,owner);recital::begin_sound(repeat,owner);controls(p,2);
+        troupe::RenderVoice note={},repeat={};troupe::begin_sound(note,owner);troupe::begin_sound(repeat,owner);controls(p,2);
         double previous=0,minimum=0,maximum=0;unsigned fingerprint=2166136261u;
         for(unsigned block=0;block<4096;++block){
             if(block){note.vibrato_wait=repeat.vibrato_wait=100000;}
-            const unsigned before=note.phase[0];recital::render_sound(note,out,p,pitch);recital::render_sound(repeat,reference,p,pitch);
+            const unsigned before=note.phase[0];troupe::render_sound(note,out,p,pitch);troupe::render_sound(repeat,reference,p,pitch);
             require(std::equal(out,out+64,reference),"Repeated owner/controls render deterministically");
             const double cents=measured_cents(before,note.phase[0],pitch[0]);
             fingerprint=(fingerprint^static_cast<unsigned>(note.phase[0]-before-pitch[0]*64u))*16777619u;

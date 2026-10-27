@@ -18,9 +18,9 @@ def generate():
     closed, projection, background, face = eyes + 5, eyes + 10, eyes + 15, eyes + 16
 
     def node(template, index):
-        return re.sub(r'id="recital_node_\d+"', f'id="recital_node_{index}"', template)
+        return re.sub(r'id="troupe_node_\d+"', f'id="troupe_node_{index}"', template)
 
-    lines = ['<g id="recital_panel">', node(art['background'], background)]
+    lines = ['<g id="troupe_panel">', node(art['background'], background)]
     for singer in range(singers):
         lines.extend(node(path, singer * mouths + index) for index, path in enumerate(art['mouths']))
     for singer in range(singers):

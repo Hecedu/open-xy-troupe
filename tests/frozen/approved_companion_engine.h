@@ -2,7 +2,7 @@
 #include "bank.h"
 #include "effort.h"
 #include "expression.h"
-namespace recital {
+namespace troupe {
 using opxy::u32;
 using opxy::i32;
 inline i32 bound(i32 x,i32 lo,i32 hi){return x<lo?lo:x>hi?hi:x;}

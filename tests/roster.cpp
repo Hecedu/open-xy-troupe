@@ -7,7 +7,7 @@ static void require(bool ok,const char* message) {
     if(!ok){std::fprintf(stderr,"FAIL: %s\n",message);std::exit(1);}
 }
 int main() {
-    using namespace recital;
+    using namespace troupe;
     const unsigned expected[10]={5,0,8,9,1,2,6,7,3,4};
     for(unsigned slot=0;slot<10;++slot) {
         const int center=static_cast<int>((2*slot+1)*2147483647LL/20);

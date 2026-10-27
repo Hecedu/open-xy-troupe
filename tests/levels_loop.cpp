@@ -6,7 +6,7 @@
 static void require(bool ok,const char* message){if(!ok){std::fprintf(stderr,"FAIL: %s\n",message);std::exit(1);}}
 static unsigned increment(unsigned note){return static_cast<unsigned>(440*std::pow(2.,(static_cast<int>(note)-69)/12.)*4294967296./44100);}
 int main(){
-    using namespace recital;
+    using namespace troupe;
     static Shared shared={};Voice voices[256]={};
     int p[8]={1073741824,1181116006,2147483647,0},out[64];unsigned pitch[64];
     // Real shared-state path: three tracks of eight sparse voices restart at

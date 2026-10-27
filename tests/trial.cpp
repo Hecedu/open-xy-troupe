@@ -7,7 +7,7 @@
 #include "../display.cpp"
 static void require(bool ok,const char* message){if(!ok){std::fprintf(stderr,"FAIL: %s\n",message);std::exit(1);}}
 int main(){
-    using namespace recital;
+    using namespace troupe;
     int p[8]={},out[64],again[64];unsigned pitch[64];
     unsigned long samples=0;bool varied_pitch=false;
     for(unsigned type=0;type<10;++type)for(unsigned vowel=0;vowel<5;++vowel)for(unsigned amount=0;amount<3;++amount){
@@ -46,7 +46,7 @@ int main(){
         for(int value:out)require(value>=-805306368&&value<=805306368,"24-note changing-control headroom");
     }
     for(unsigned type=0;type<10;++type){
-        DisplayState state={};recital::Frame frame={};opxy::draw::Input input={};
+        DisplayState state={};troupe::Frame frame={};opxy::draw::Input input={};
         input.slots[0]=INT_MAX/2;input.slots[1]=static_cast<int>((2*type+1)*2147483647LL/20);
         input.slots[2]=INT_MAX;input.slots[3]=INT_MAX/2;input.held_notes=3;
         display_reset(state);

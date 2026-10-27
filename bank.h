@@ -1,7 +1,7 @@
 #pragma once
 #include <opxy/audio.hpp>
 #include "bank_stream.h"
-namespace recital {
+namespace troupe {
 // Authored periodic vocal waves, generated offline. Layout: type, pitch, vowel.
 const unsigned bank_pitch_count=29, bank_vowel_count=5, bank_frames=256;
 const opxy::u32 bank_pitch[29]={3185014,3787642,4504291,5356535,6370029,7575284,9008582,10713070,12740059,15150569,18017164,21426140,25480118,30301138,36034329,42852281,50960237,60602277,72068659,85704562,101920475,121204555,144137319,171409125,203840951,242409110,288274638,342818251,407681903};

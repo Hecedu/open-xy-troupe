@@ -30,7 +30,7 @@ def generate():
     bits=np.unpackbits(unsigned.view(np.uint8),bitorder='little').reshape(-1,16)[:,:14].reshape(-1)
     payload=np.packbits(bits,bitorder='little').tobytes()
     words=np.frombuffer(payload,dtype='<u4').tolist()+[0]
-    header = '#pragma once\n#include <opxy/audio.hpp>\nnamespace recital {\nconst opxy::u32 cast_words['+str(len(words))+']={\n'
+    header = '#pragma once\n#include <opxy/audio.hpp>\nnamespace troupe {\nconst opxy::u32 cast_words['+str(len(words))+']={\n'
     header += ''.join(','.join(str(value)+'u' for value in words[at:at+12])+',\n' for at in range(0,len(words),12))
     header += '''};
 // Exact signed 14-bit direct lookup with one immutable guard word.
@@ -43,7 +43,7 @@ inline opxy::i32 cast_sample(unsigned table,unsigned sample){
 }
 }
 '''
-    roster = '#pragma once\nnamespace recital {\n'
+    roster = '#pragma once\nnamespace troupe {\n'
     for name, array in [('cast_members',members),('cast_lead_for_body',inverse)]:
         roster += 'const unsigned '+name+'[10][5]={'+','.join('{'+','.join(map(str,row))+'}' for row in array)+'};\n'
     roster += '}\n'

@@ -12,13 +12,13 @@ int main(){
     unsigned long long pitch_energy[3]={};
     int p[8]={},out[64];unsigned pitch[64];
     for(unsigned amount=0;amount<3;++amount)for(unsigned type=0;type<10;++type){
-        recital::RenderVoice state={};recital::begin_sound(state,37);
+        troupe::RenderVoice state={};troupe::begin_sound(state,37);
         p[1]=static_cast<int>((2*type+1)*2147483647LL/20);
         p[2]=static_cast<int>(amount*2147483647LL/2);p[3]=1073741824;
-        std::fill(pitch,pitch+64,recital::bank_pitch[14]+12345);
+        std::fill(pitch,pitch+64,troupe::bank_pitch[14]+12345);
         for(unsigned block=0;block<2048;++block){
             p[0]=static_cast<int>((block*37u%32768u)*65536u);
-            recital::render_sound(state,out,p,pitch);
+            troupe::render_sound(state,out,p,pitch);
             for(int value:out)hashes[amount]=(hashes[amount]^static_cast<unsigned>(value))*1099511628211ULL;
             if(block>1024)pitch_energy[amount]+=static_cast<unsigned>(state.pitch_offset[0]<0?-state.pitch_offset[0]:state.pitch_offset[0]);
         }
@@ -34,7 +34,7 @@ def main():
         subprocess.run([compiler,'-std=c++11','-O2','-Wall','-Werror','-I'+str(SDK/'sdk/include'),
                         '-I'+str(MACHINE),'-I'+str(MACHINE/'tests'),str(cpp),'-o',str(binary)],check=True)
         return subprocess.check_output([str(binary)])
-    with tempfile.TemporaryDirectory(prefix='recital-trial-oracle-') as scratch:
+    with tempfile.TemporaryDirectory(prefix='troupe-trial-oracle-') as scratch:
         scratch=Path(scratch)
         candidate=compile_run(scratch,'candidate','#include "engine.cpp"\n'+WORKLOAD)
         approved=compile_run(scratch,'approved','#include "frozen/approved_companion_engine.h"\n'+WORKLOAD)
@@ -56,9 +56,9 @@ def main():
 #include "engine.cpp"
 #include <cstdio>
 int main(){for(unsigned amount=0;amount<=256;amount+=64)for(unsigned table=0;table<1450;++table){
-    recital::WaveKey key={table/145|(amount<<8),(table%145)/5,0,table%5,0};
-    recital::BankStream streams[4]={};opxy::i16 wave[256];
-    for(unsigned at=0;at<256;at+=16)recital::bank_slice(key,at,wave+at,streams);
+    troupe::WaveKey key={table/145|(amount<<8),(table%145)/5,0,table%5,0};
+    troupe::BankStream streams[4]={};opxy::i16 wave[256];
+    for(unsigned at=0;at<256;at+=16)troupe::bank_slice(key,at,wave+at,streams);
     std::fwrite(wave,sizeof(wave),1,stdout);
 }}
 '''

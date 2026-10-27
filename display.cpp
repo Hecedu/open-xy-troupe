@@ -4,7 +4,7 @@
 #include "voice_types.h"
 #include "effort.h"
 #include "cast_members.h"
-namespace recital {
+namespace troupe {
 namespace {
 using opxy::i32;
 using opxy::u32;

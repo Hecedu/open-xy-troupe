@@ -14,7 +14,7 @@ def run_cpp(name, sanitize=False):
         raise RuntimeError('Set CXX to a host C++11 compiler')
     if not (SDK / 'sdk/include/opxy/audio.hpp').is_file():
         raise RuntimeError('Set OPEN_XY_SDK to the Open-XY SDK checkout')
-    with tempfile.TemporaryDirectory(prefix='recital-test-') as scratch:
+    with tempfile.TemporaryDirectory(prefix='troupe-test-') as scratch:
         binary = Path(scratch) / (name + ('.exe' if os.name == 'nt' else ''))
         flags = ['-fsanitize=address,undefined', '-fno-sanitize-recover=all'] if sanitize else []
         subprocess.run([compiler, '-std=c++11', '-O2', '-Wall', '-Werror', *flags,

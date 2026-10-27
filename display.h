@@ -1,7 +1,7 @@
 #pragma once
 #include <opxy/draw.hpp>
 #include "voice_types.h"
-namespace recital {
+namespace troupe {
 // SDK drawing frame: mutable outlines, points, nodes, text slots, palette entries.
 // The visual ensemble is independent of the three audio singers.
 const unsigned display_singers=5;

@@ -1,6 +1,6 @@
 #pragma once
 #include <opxy/audio.hpp>
-namespace recital {
+namespace troupe {
 // Four wave corners resume their exact residual stream during a morph.
 // Scalar state only; no pointers, cache ownership, allocation or extra waves.
 struct BankStream {

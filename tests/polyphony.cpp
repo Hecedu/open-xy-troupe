@@ -7,7 +7,7 @@
 static void require(bool ok,const char* message){if(!ok){std::fprintf(stderr,"FAIL: %s\n",message);std::exit(1);}}
 static unsigned increment(int note){return static_cast<unsigned>(440*std::pow(2.0,(note-69)/12.0)*4294967296.0/44100);}
 int main(){
-    using namespace recital;
+    using namespace troupe;
     Shared shared={};Voice voices[256]={};int out[64],params[8]={1073741824,1252698794,0,1073741824};unsigned pitch[64];
     for(unsigned n=0;n<256;++n)initialize(voices[n],shared,n+1);
     unsigned ids[24];for(unsigned n=0;n<24;++n){ids[n]=(n*37+19)%256;start(voices[ids[n]],shared,ids[n]+1);}

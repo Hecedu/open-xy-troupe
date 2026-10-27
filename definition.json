@@ -1,7 +1,7 @@
 {
   "schema": 1,
-  "id": "recital",
-  "name": "Recital",
+  "id": "troupe",
+  "name": "Troupe",
   "parameters": [
     {
       "id": "vowel",

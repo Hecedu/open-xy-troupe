@@ -3,10 +3,10 @@
 #include <algorithm>
 #include "engine.cpp"
 static void require(bool ok,const char* message){if(!ok){std::fprintf(stderr,"FAIL: %s\n",message);std::exit(1);}}
-static_assert(recital::active_notes==24,"Retain the 24-note renderer");
-static_assert(sizeof(recital::BankStream)==36&&sizeof(recital::Shared)==82448,"Four bounded resume states per note plus fixed startup and prepared caches");
+static_assert(troupe::active_notes==24,"Retain the 24-note renderer");
+static_assert(sizeof(troupe::BankStream)==36&&sizeof(troupe::Shared)==82448,"Four bounded resume states per note plus fixed startup and prepared caches");
 int main(){
-    using namespace recital;
+    using namespace troupe;
     int previous=-1;
     for(int word=0;word<=32768;++word){
         const int value=vowel_curve(word);

@@ -4,7 +4,7 @@
 #include "voice_types.h"
 #include "bank_stream.h"
 namespace approved_cast {
-using namespace recital;
+using namespace troupe;
 const unsigned max_singers=3, active_notes=24;
 // No pointers in persistent state: identical layout in native and browser builds.
 struct WaveKey { opxy::u32 type, pitch, pitch_mix, vowel, vowel_mix; };

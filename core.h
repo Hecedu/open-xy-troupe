@@ -3,7 +3,7 @@
 #include <opxy/lease_pool.hpp>
 #include "voice_types.h"
 #include "bank_stream.h"
-namespace recital {
+namespace troupe {
 const unsigned max_singers=1, active_notes=24;
 // No pointers in persistent state: identical layout in native and browser builds.
 struct WaveKey { opxy::u32 type, pitch, pitch_mix, vowel, vowel_mix; };

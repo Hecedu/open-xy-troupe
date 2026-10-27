@@ -5,7 +5,7 @@
 static void require(bool ok,const char* message){if(!ok){std::fprintf(stderr,"FAIL: %s\n",message);std::exit(1);}}
 static void bounded(const int* output){for(unsigned i=0;i<64;++i)require(output[i]>=-805306368&&output[i]<=805306368,"Handoffs retain the declared output peak");}
 int main(){
-    using namespace recital;
+    using namespace troupe;
     Shared shared={};Voice voices[256]={};int output[64],expected[64];
     int p[8]={1073741824,1181116006,966367641,1073741824};unsigned pitch[64];
     int last[24]={};

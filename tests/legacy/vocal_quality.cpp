@@ -16,7 +16,7 @@ static double band_power(const double* samples,unsigned count,double low,double 
     return power/32;
 }
 int main(){
-    using namespace recital;
+    using namespace troupe;
     int p[8]={1073741824,1252698794,0,1073741824},out[64];unsigned pitch[64];
     std::fill(pitch,pitch+64,42852281u);
     require(air_envelope(0)==0&&air_envelope(32768)==32768,"Breath is silent at start and settles at sustain");

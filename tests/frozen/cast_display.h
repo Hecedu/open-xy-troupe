@@ -5,7 +5,7 @@
 #include "effort.h"
 #include "cast_members.h"
 namespace approved_cast {
-using namespace recital;
+using namespace troupe;
 namespace {
 using opxy::i32;
 using opxy::u32;
@@ -30,7 +30,7 @@ const i32 stagger[display_singers]={0,18,11,29,23};
 inline i32 smooth_sine(u32 phase){
     phase&=65535;
     const u32 index=phase>>8, fraction=phase&255;
-    return recital::sine[index]+(recital::sine[index+1]-recital::sine[index])*static_cast<i32>(fraction)/256;
+    return troupe::sine[index]+(troupe::sine[index+1]-troupe::sine[index])*static_cast<i32>(fraction)/256;
 }
 inline void update_look(DisplayState& state,u32 requested,u32 track,i32 elapsed) {
     if(!state.look_initialized||state.look_track!=track) {
@@ -66,7 +66,7 @@ inline void display_reset(DisplayState& state) {
     state.startup_track=state.startup_initialized=0; state.startup_age=0;
     for(u32 look=0;look<voice_count;++look) state.look_start[look]=state.look_weights[look]=0;
 }
-inline void display(DisplayState& state,const opxy::draw::Input& input,recital::Frame& frame) {
+inline void display(DisplayState& state,const opxy::draw::Input& input,troupe::Frame& frame) {
     using namespace opxy::draw;
     const i32 elapsed=clamp(input.elapsed,0,102);
     if(!state.startup_initialized||state.startup_track!=input.track) {

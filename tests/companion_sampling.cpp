@@ -3,7 +3,7 @@
 #include "frozen/approved_companion_engine.h"
 static void require(bool ok,const char* message){if(!ok){std::fprintf(stderr,"FAIL: %s\n",message);std::exit(1);}}
 int main(){
-    using namespace recital;
+    using namespace troupe;
     opxy::i16 wave[256];unsigned long checks=0;
     const unsigned fractions[]={0,1,0x007fffff,0x00800000,0x00fffffe,0x00ffffff};
     for(unsigned table=0;table<1450;++table){

@@ -6,7 +6,9 @@ on:
 permissions:
   contents: read
 env:
-  # Development follows staging; pin a compatible SDK commit for a release.
+  # Preserved validation dependency; not yet available on the public SDK fork.
+  # README.md tracks the checkout and browser-memory blockers. Do not replace
+  # this pin merely to make CI green without qualifying the replacement SDK.
   OPEN_XY_REF: 1663f60d21c24bf7feafda28f01cd82efdf008d4
 jobs:
   machine:

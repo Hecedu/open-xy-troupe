@@ -30,35 +30,35 @@ int main() {
     for(unsigned type=0;type<10;++type)for(unsigned anchor=0;anchor<29;++anchor)
     for(unsigned middle=0;middle<2;++middle)for(unsigned vowel=0;vowel<5;++vowel)
     for(unsigned ensemble=0;ensemble<2;++ensemble) {
-        recital::RenderVoice packed={};
-        recital::begin_sound(packed,37);
+        troupe::RenderVoice packed={};
+        troupe::begin_sound(packed,37);
         parameters[0]=static_cast<int>(vowel*2147483647LL/4);
         parameters[1]=static_cast<int>((2*type+1)*2147483647LL/20);
         parameters[2]=ensemble?INT_MAX:0;parameters[3]=ensemble?INT_MAX:0;
-        const unsigned lo=recital::bank_pitch[anchor],hi=recital::bank_pitch[anchor<28?anchor+1:anchor];
+        const unsigned lo=troupe::bank_pitch[anchor],hi=troupe::bank_pitch[anchor<28?anchor+1:anchor];
         std::fill(pitch,pitch+64,middle?lo+(hi-lo)/2:lo);
         for(unsigned block=0;block<128;++block) {
-            recital::render_sound(packed,b,parameters,pitch);
+            troupe::render_sound(packed,b,parameters,pitch);
             digest.add(b,sizeof(b));digest.add(&packed,sizeof(packed));samples+=64;
         }
     }
     // A live 24-note chord: interrupted morphs, character/effort/Ensemble
     // sweeps, per-sample pitch changes, independent vibrato/drift, restrikes.
-    recital::RenderVoice packed[24]={};
-    for(unsigned n=0;n<24;++n){recital::begin_sound(packed[n],19+n*7);}
+    troupe::RenderVoice packed[24]={};
+    for(unsigned n=0;n<24;++n){troupe::begin_sound(packed[n],19+n*7);}
     for(unsigned block=0;block<3072;++block)for(unsigned note=0;note<24;++note) {
         parameters[0]=static_cast<int>((block*7919u)%32768)*65536;
         parameters[1]=static_cast<int>(((block/37)%10*2+1)*2147483647LL/20);
         parameters[2]=block%200<100?static_cast<int>((block%100)*2147483647LL/99):0;
         parameters[3]=static_cast<int>((block*3571u)%32768)*65536;
-        for(unsigned i=0;i<64;++i)pitch[i]=recital::bank_pitch[2+note%25]+i*137+block%19;
-        if(block%251==0){recital::begin_sound(packed[note],19+note*7);}
-        recital::render_sound(packed[note],b,parameters,pitch);
+        for(unsigned i=0;i<64;++i)pitch[i]=troupe::bank_pitch[2+note%25]+i*137+block%19;
+        if(block%251==0){troupe::begin_sound(packed[note],19+note*7);}
+        troupe::render_sound(packed[note],b,parameters,pitch);
         digest.add(b,sizeof(b));digest.add(&packed[note],sizeof(packed[note]));samples+=64;
     }
-    recital::DisplayState state={};
-    recital::Frame frame={};opxy::draw::Input input={};
-    recital::display_reset(state);
+    troupe::DisplayState state={};
+    troupe::Frame frame={};opxy::draw::Input input={};
+    troupe::display_reset(state);
     for(unsigned step=0;step<8192;++step) {
         input.slots[0]=static_cast<int>((step*3571u)%32768)*65536;
         input.slots[1]=static_cast<int>(((step/13)%10*2+1)*2147483647LL/20);
@@ -67,8 +67,8 @@ int main() {
         input.elapsed=step%29;input.track=(step/113)%9;input.reduced_motion=(step/71)%2;
         input.held_notes=step%31<20?3:0;input.note_serial=step/3;input.note_off_serial=step/7;
         // Compare the unchanged normal display after the intentionally new entrance.
-        state.startup_initialized=1;state.startup_track=input.track;state.startup_age=recital::startup_end;
-        recital::display(state,input,frame);
+        state.startup_initialized=1;state.startup_track=input.track;state.startup_age=troupe::startup_end;
+        troupe::display(state,input,frame);
         digest.add(&frame,sizeof(frame));digest.add(&state,sizeof(state));++frames;
     }
     std::printf("render samples=%lu frames=%lu hash=%016llx\n",samples,frames,digest.value);

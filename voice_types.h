@@ -1,6 +1,6 @@
 #pragma once
 #include <opxy/audio.hpp>
-namespace recital {
+namespace troupe {
 const unsigned voice_count=10;
 // Female/male pairs: young, bright/light, adult, textured, opera.
 // Internal identities of the original six remain unchanged; new ones append.

@@ -4,7 +4,7 @@
 #include "engine.cpp"
 static void require(bool ok,const char* message){if(!ok){std::fprintf(stderr,"FAIL: %s\n",message);std::exit(1);}}
 int main(){
-    using namespace recital;
+    using namespace troupe;
     for(int x=-32767;x<=32767;++x)require(quiet_fundamental(x)==x/10,"Exact signed cold-sine division across its entire range");
     PreparedCache cache={};opxy::i16 wave[256],copy[256];
     for(unsigned id=0;id<200;++id){

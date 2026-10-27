@@ -40,7 +40,7 @@ def main():
                 f'Approved audio/animation preservation: {name}')
     panel = (FOLDER / 'panel.svg.fragment').read_text()
     require(load('generate_panel').generate() == panel, 'Exact artwork regeneration')
-    ids = [int(number) for number in re.findall(r'id="recital_node_(\d+)"', panel)]
+    ids = [int(number) for number in re.findall(r'id="troupe_node_(\d+)"', panel)]
     require(sorted(ids) == list(range(156)), 'Every native node has exactly one authored path')
     art = json.loads((FOLDER / 'panel_templates.json').read_text())
     require(len(set(re.sub(r'id="[^"]+"', '', path) for path in art['bodies'])) == 10,

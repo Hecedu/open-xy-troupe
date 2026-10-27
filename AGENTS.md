@@ -1,9 +1,11 @@
 # Machine development
 
-This repository holds Recital (`recital`). The machine is at the repository root.
+This repository holds Troupe (formerly Recital; permanent ID `troupe`).
+The machine is at the repository root. Its ID, namespace and artwork IDs use
+`troupe`; old Recital project mappings do not migrate automatically.
 Read README.md and use the [Open-XY SDK](https://github.com/etcetc000/open-xy)
-on `staging`, normally checked out beside this repository as `../open-xy`.
-Adjust that path if the user already has the SDK elsewhere.
+normally checked out beside this repository as `../open-xy`. Read the README's
+SDK dependency and review-status notes before running its full checks.
 
 1. Read the [machine API](https://github.com/etcetc000/open-xy/blob/staging/docs/api.md)
    and the relevant [core machines](https://github.com/etcetc000/open-xy-core-machines):
@@ -38,9 +40,11 @@ firmware-containing packages must stay outside every checkout, even ignored
 folders. Device operations require an explicit user instruction; building and
 testing locally do not authorize installing firmware or running diagnostics.
 
-Preserve the user-approved machine reference and compare every candidate with it.
-Keep reference packages, manifests, source snapshots, layout and approval records
-together outside all checkouts. A new candidate is not an approved reference
-until the user confirms stability after installation. Recital derives from
-Choir's approved startup-002 source; do not substitute an arbitrary local Choir
-prototype. Run the Python machine checks in README.md as well as `sdk.py test`.
+Preserve source contracts, frozen fixture bindings and historical golden values.
+Troupe's rename baseline is Recital commit
+`e88f57662e22ea5ecab08e25e91239d6b7d94020`, using SDK revision
+`1663f60d21c24bf7feafda28f01cd82efdf008d4`. Do not substitute an arbitrary
+prototype or infer hardware approval for the new identity from earlier results.
+Run the Python machine checks in README.md as well as `sdk.py test` when its
+SDK dependencies are available. Follow any enclosing workspace's reference and
+hardware-approval policy; keep preserved hardware records immutable and private.

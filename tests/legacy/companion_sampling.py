@@ -19,7 +19,7 @@ def main():
     expected = 'c62d10ebe1e7a8e24dfb61f4138e2d42a1dc215c17b60840591458d1028274eb'
     original = reference.split('Production uses ../engine.cpp.\n', 1)[1]
     if hashlib.sha256(original.encode()).hexdigest() != expected:
-        raise RuntimeError('Frozen recital-decoder-001 renderer changed')
+        raise RuntimeError('Frozen troupe-decoder-001 renderer changed')
     oracle = reference.replace('inline i32 sample(const opxy::i16* table,u32 phase){',
         'static bool oracle_companion=false;\ninline i32 sample(const opxy::i16* table,u32 phase){\n'
         '    if(oracle_companion && table!=sine)phase=(phase+0x00800000u)&0xff000000u;')
@@ -31,7 +31,7 @@ def main():
     if not compiler:
         raise RuntimeError('Set CXX to a host C++11 compiler')
     results = {}
-    with tempfile.TemporaryDirectory(prefix='recital-companion-oracle-') as scratch:
+    with tempfile.TemporaryDirectory(prefix='troupe-companion-oracle-') as scratch:
         scratch = Path(scratch)
         for name, engine in [('approved', reference), ('oracle', oracle), ('candidate', (MACHINE / 'engine.cpp').read_text())]:
             source = scratch / (name + '.cpp')
