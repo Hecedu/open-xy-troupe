@@ -27,6 +27,19 @@ aligned. Selecting a page or another track starts a 200 ms center-out entrance
 when the SDK supplies display activation resets. Reduced motion settles the
 formation immediately and removes sway.
 
+## Companion-sampling profiling candidate
+
+This branch uses nearest-sample waveform lookup for the two audio companions;
+the lead keeps linear interpolation. Both sides of companion crossfades use
+the cheaper lookup. Quiet startup, upper-pitch fallback, expression, breath,
+wave preparation, controls, presets and UI retain the decoder reference behavior.
+Companions can sound grainier or more metallic, especially on bright high notes.
+CPU benefit and acceptable sound quality require audition and hardware profiling.
+
+The original decoder renderer and its historical fingerprints remain in tests.
+A separate phase-quantized reference oracle checks current ensemble output,
+exact solo output and unchanged control state without replacing old goldens.
+
 ## Develop and audition
 
 Keep an [Open-XY SDK](https://github.com/etcetc000/open-xy) checkout beside this

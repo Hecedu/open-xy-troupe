@@ -4,13 +4,15 @@
 #include <climits>
 #include <cstring>
 #include <algorithm>
-#include "../engine.cpp"
+#include "approved_decoder_engine.h"
 #include "../display.cpp"
 
 static void require(bool ok,const char* message) {
     if(!ok){std::fprintf(stderr,"FAIL: %s\n",message);std::exit(1);}
 }
 
+// Historical fingerprints validate the frozen decoder renderer. Current audio
+// is compared with an independent sampling oracle in companion_sampling.py.
 // Frozen regression workload from the user-approved Choir startup-002 source.
 // Hash each emitted sample and state byte; expected values were measured before renaming.
 struct Digest {
