@@ -1,0 +1,41 @@
+{
+  "tables": 1450,
+  "frames": 256,
+  "table_bytes": 742400,
+  "peak_i16": 7800,
+  "sha256": "80239e4495c4550e3a2b52a2a2629651dc1147e31b48aefb27dd39c2b9099d2e",
+  "authored_spectra_sha256": "e1ae4978aab53946babc8d29fe472a686f7e22085105114bad367a77e4b304d5",
+  "authored_spectra_format": "numpy-npy-pair/1",
+  "sample_rate": 44100,
+  "firmware_or_stock_inputs": false,
+  "characters": [
+    "Bart",
+    "Emily",
+    "Luis",
+    "Tamaki",
+    "Bertram",
+    "Mandy",
+    "Mabel",
+    "Rocco",
+    "Zelda",
+    "Pip"
+  ],
+  "phase_dispersion": [
+    -0.08,
+    0.06499999999999999,
+    -0.0645,
+    -0.0365,
+    -0.075,
+    0.0715,
+    -0.08,
+    0.0725,
+    -0.054,
+    0.08
+  ],
+  "anchor_level_adjustment_db": [
+    -0.5,
+    0.5
+  ],
+  "resonance_frequency_basis": "original harmonic times anchor fundamental",
+  "shared_harmonic_phase_per_character": true
+}

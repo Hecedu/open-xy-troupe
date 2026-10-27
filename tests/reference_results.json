@@ -1,0 +1,10 @@
+{
+  "reference_callbacks": {
+    "approved_reference": "choir-startup-002",
+    "result": "callbacks samples=5849088 cached_visits=46080 hash=3e8029976d5ab8bf"
+  },
+  "reference_render": {
+    "approved_reference": "choir-startup-002",
+    "result": "render samples=52232192 frames=8192 hash=42b084168b78452b"
+  }
+}
