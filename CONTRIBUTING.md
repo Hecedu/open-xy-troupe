@@ -26,6 +26,9 @@ python generate_cast.py
 
 `tests/bank_quality.py`, `tests/packing.py` and `tests/roster.py` independently
 check spectral identity, exact sample decoding, data regeneration and artwork.
+Voice-authoring float64 intermediates allow at most 32 machine epsilons of
+relative roundoff across math libraries; phases, stored-source hashes and every
+regenerated integer waveform sample remain exact.
 `author_predictors.py` is an optional offline authoring tool; normal regeneration
 uses the committed integer coefficients in `predictors.json`.
 

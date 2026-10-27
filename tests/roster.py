@@ -51,8 +51,20 @@ def main():
     for index in range(4):
         bank.generate(magnitudes[index:index + 1], phases[index:index + 1], normalize_new=True)
     with load_spectra(FOLDER / 'additional_spectra', allow_pickle=False) as source:
-        require(np.array_equal(magnitudes, source['magnitudes']) and np.array_equal(phases, source['source_phases']),
-                'Exact regeneration of all four added character spectra')
+        # ARM/x86 math libraries differ in the last few float64 bits. The
+        # stored sources retain their exact hashes in packing.py; regenerated
+        # integer audio must still match every committed sample below.
+        relative = np.divide(np.abs(magnitudes - source['magnitudes']), np.abs(source['magnitudes']),
+                             out=np.zeros_like(magnitudes), where=source['magnitudes'] != 0)
+        require(np.allclose(magnitudes, source['magnitudes'], rtol=32 * np.finfo(np.float64).eps, atol=0)
+                and np.array_equal(phases, source['source_phases']),
+                f'Roundoff-bounded spectra and exact phases; max relative error {relative.max():.3g}')
+    authored = np.array([np.fromstring(line.strip().strip('{},'), sep=',', dtype=np.int32)
+                         for part in (2, 3) for line in (FOLDER / f'bank_{part}.h').read_text().splitlines()])
+    # Match the authoring sequence: normalize spectra, then generate the bank.
+    rebuilt, _, _ = bank.generate(magnitudes, phases)
+    require(np.array_equal(rebuilt.reshape(-1, 256), authored),
+            'Exact regeneration of every integer waveform sample for the four added characters')
     print('PASS: ten paired presets, preserved approved banks and animation, ten unique silhouettes, complete native artwork and reproducible new voices.')
 
 
