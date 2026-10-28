@@ -29,10 +29,14 @@ int main(){
 
 def main():
     compiler=shutil.which(os.environ.get('CXX','c++'))
-    def compile_run(folder, name, source):
+    def compile_run(folder, name, source, binary_output=False):
         cpp=folder/(name+'.cpp');binary=folder/name;cpp.write_text(source)
         subprocess.run([compiler,'-std=c++11','-O2','-Wall','-Werror','-I'+str(SDK/'sdk/include'),
                         '-I'+str(MACHINE),'-I'+str(MACHINE/'tests'),str(cpp),'-o',str(binary)],check=True)
+        if binary_output:
+            output=folder/(name+'.bin')
+            subprocess.run([str(binary),str(output)],check=True)
+            return output.read_bytes()
         return subprocess.check_output([str(binary)])
     with tempfile.TemporaryDirectory(prefix='troupe-trial-oracle-') as scratch:
         scratch=Path(scratch)
@@ -55,14 +59,20 @@ def main():
             source=r'''
 #include "engine.cpp"
 #include <cstdio>
-int main(){for(unsigned amount=0;amount<=256;amount+=64)for(unsigned table=0;table<1450;++table){
+int main(int argc,char** argv){
+    if(argc!=2)return 1;
+    std::FILE* output=std::fopen(argv[1],"wb");
+    if(!output)return 1;
+    for(unsigned amount=0;amount<=256;amount+=64)for(unsigned table=0;table<1450;++table){
     troupe::WaveKey key={table/145|(amount<<8),(table%145)/5,0,table%5,0};
     troupe::BankStream streams[4]={};opxy::i16 wave[256];
     for(unsigned at=0;at<256;at+=16)troupe::bank_slice(key,at,wave+at,streams);
-    std::fwrite(wave,sizeof(wave),1,stdout);
-}}
+    if(std::fwrite(wave,sizeof(wave),1,output)!=1){std::fclose(output);return 1;}
+    }
+    return std::fclose(output)==0?0:1;
+}
 '''
-            actual=np.frombuffer(compile_run(scratch,'tables',source),dtype='<i2').reshape(5,1450,256)
+            actual=np.frombuffer(compile_run(scratch,'tables',source,binary_output=True),dtype='<i2').reshape(5,1450,256)
             def array(text):
                 return np.array([np.fromstring(row.strip().strip('{},'),sep=',',dtype=np.int32)
                                  for row in text.splitlines() if row.startswith('{')])
