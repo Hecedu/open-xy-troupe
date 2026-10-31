@@ -188,11 +188,11 @@
   "numbered_label_sources": {
     "generate_bank.py": {
       "sha256": "1e57ca0db0ffe8efa4637ee077d39c4533a65a321d431d1bf7772557b2fb6a8e",
-      "algorithm_sha256": "5bb5b6e6b8aaab57b01d7163776fa17fb7492c27701bcb0b8856edb84d34c76d"
+      "algorithm_sha256": "3610ebf6bb95c336a22d1ffe5394505a9612b2b7bb740c3a47f10e21c4341936"
     },
     "generate_characters.py": {
       "sha256": "93aea9d872dcf297f77c4413ca0879471d32428186bf28ed21abdb0cbf471fb4",
-      "algorithm_sha256": "a2f78360eae0a5df687658de0a6b5062e5f75fe416bea2fc634bcc0e0f3f0687"
+      "algorithm_sha256": "4dde5922564ee213dbbe8d080d4c96b8cab91b81d46017988fb7e61b0c156c23"
     },
     "expression.h": {
       "sha256": "096c76d56c74f67073cebd2617db863ed6ebb18b2d60c2c822ea2c900df56919",

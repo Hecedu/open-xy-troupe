@@ -7,6 +7,16 @@ sha=lambda data:hashlib.sha256(data).hexdigest()
 # Undo only the authorized identity spelling when checking historical hashes.
 original_names=lambda data:data.replace(b'troupe',b'recital')
 reference=json.loads((ROOT/'tests/cleanup_reference.json').read_text())
+def canonical_ast(value):
+    if isinstance(value,ast.AST):
+        # Include optional fields explicitly; ast.dump defaults vary by Python.
+        fields={name:canonical_ast(getattr(value,name,None)) for name in value._fields
+                if name!='type_params' or getattr(value,name,None)}
+        return [type(value).__name__,fields]
+    if isinstance(value,list):
+        return [canonical_ast(item) for item in value]
+    return repr(value)
+
 def without_labels(name,data):
     text=original_names(data).decode()
     if name=='expression.h':
@@ -15,16 +25,13 @@ def without_labels(name,data):
     if tree.body and isinstance(tree.body[0],ast.Expr) and isinstance(tree.body[0].value,ast.Constant) and isinstance(tree.body[0].value.value,str):
         tree.body[0].value=ast.Constant(None)
     for node in ast.walk(tree):
-        # Python 3.12 added this empty field; keep 3.11+ fingerprints identical.
-        if hasattr(node,'type_params') and not node.type_params:
-            node._fields=tuple(field for field in node._fields if field!='type_params')
         if isinstance(node,ast.Assign) and any(isinstance(t,ast.Name) and t.id in ('CHARACTERS','NAMES') for t in node.targets):
             expected=('2','5','6','9','10','1','7','8','3','4') if name=='generate_bank.py' else ('7','8','3','4')
             assert ast.literal_eval(node.value)==expected,'Generator labels retain internal voice order'
             node.value=ast.Constant(None)
         if isinstance(node,ast.Call) and isinstance(node.func,ast.Name) and node.func.id=='print' and node.args and isinstance(node.args[0],ast.Constant) and isinstance(node.args[0].value,str) and node.args[0].value.startswith('Authored ') and node.args[0].value.endswith('reference spectra untouched.'):
             node.args[0]=ast.Constant(None)
-    return ast.dump(tree,include_attributes=False).encode()
+    return json.dumps(canonical_ast(tree),sort_keys=True,separators=(',',':')).encode()
 for name,digest in reference['unchanged_files'].items():
     data=(ROOT/name).read_bytes()
     if name in reference['numbered_label_sources']:
