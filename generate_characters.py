@@ -1,7 +1,7 @@
 """Author four additional synthetic voices from the preserved harmonic spectra.
 
 Only offline spectral shaping: keyboard fundamentals, runtime arithmetic,
-polyphony and the six reference voices are unchanged. The named voices are
+polyphony and the six reference voices are unchanged. The numbered voices are
 synthetic character designs, not recordings or demographic models.
 """
 from pathlib import Path
@@ -9,7 +9,7 @@ import numpy as np
 from spectra import load_spectra, save_spectra, spectra_digest
 
 FOLDER = Path(__file__).resolve().parent
-NAMES = ('Mabel', 'Rocco', 'Zelda', 'Pip')
+NAMES = ('7', '8', '3', '4')
 
 
 def generate(magnitudes, source_phases):
@@ -20,10 +20,10 @@ def generate(magnitudes, source_phases):
     pitches = 440 * 2 ** ((np.arange(29) * 3 + 24 - 69) / 12)
     # Base identity, resonance-frequency ratio, spectral tilt, odd emphasis,
     # nasal resonance. No keyboard transposition is applied to any voice.
-    recipes = ((1, .88, .28, .18, 0),       # Mabel: dark alto, husky edges.
-               (2, .78, .40, .38, 0),       # Rocco: low chest, reedy/gravelly.
-               (5, 1.08, -.08, .24, .95),   # Zelda: forward nasal brightness.
-               (0, 1.04, .95, -.05, 0))     # Pip: pure, fundamental-led light male.
+    recipes = ((1, .88, .28, .18, 0),       # 7: dark alto, husky edges.
+               (2, .78, .40, .38, 0),       # 8: low chest, reedy/gravelly.
+               (5, 1.08, -.08, .24, .95),   # 3: forward nasal brightness.
+               (0, 1.04, .95, -.05, 0))     # 4: pure, fundamental-led light male.
     result, phases = [], []
     for index, (base, tract, tilt, odd, nasal) in enumerate(recipes):
         authored = np.zeros((29, 5, 129))
@@ -66,7 +66,7 @@ def main():
         _, _, _ = waves(single, phases[character:character + 1], normalize_new=True)
     save_spectra(FOLDER / 'additional_spectra', magnitudes=magnitudes,
                         source_phases=phases)
-    print('Authored Mabel, Rocco, Zelda and Pip; reference spectra untouched.')
+    print('Authored voices 7, 8, 3 and 4; reference spectra untouched.')
 
 
 if __name__ == '__main__':

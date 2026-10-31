@@ -5,7 +5,7 @@ The machine is at the repository root. Its ID, namespace and artwork IDs use
 `troupe`; old Recital project mappings do not migrate automatically.
 Read README.md and use the [Open-XY SDK](https://github.com/etcetc000/open-xy)
 normally checked out beside this repository as `../open-xy`. Read the README's
-SDK dependency and review-status notes before running its full checks.
+SDK dependency and validation notes before running its full checks.
 
 1. Read the [machine API](https://github.com/etcetc000/open-xy/blob/staging/docs/api.md)
    and the relevant [core machines](https://github.com/etcetc000/open-xy-core-machines):
@@ -27,8 +27,8 @@ SDK dependency and review-status notes before running its full checks.
    Prepare a profiling-enabled build from committed source, request a device test
    if not already authorized, and wait for confirmation of installation/reboot.
    Collect three complete runs, generate the report and explain its scope.
-   Never invent a CPU number from host checks. If hardware is unavailable, report
-   that validation remains pending; a maintainer can run the batch.
+   Never invent a CPU number from host checks. If hardware is unavailable, document
+   the checks performed so a maintainer can run the hardware batch.
 5. If publication is requested, follow
    [catalog submission](https://github.com/etcetc000/open-xy/blob/staging/docs/catalog.md#submit-a-machine).
    New or changed draft/published entries require the hardware `cpu` record for

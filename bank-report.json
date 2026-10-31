@@ -9,16 +9,16 @@
   "sample_rate": 44100,
   "firmware_or_stock_inputs": false,
   "characters": [
-    "Bart",
-    "Emily",
-    "Luis",
-    "Tamaki",
-    "Bertram",
-    "Mandy",
-    "Mabel",
-    "Rocco",
-    "Zelda",
-    "Pip"
+    "2",
+    "5",
+    "6",
+    "9",
+    "10",
+    "1",
+    "7",
+    "8",
+    "3",
+    "4"
   ],
   "phase_dispersion": [
     -0.08,

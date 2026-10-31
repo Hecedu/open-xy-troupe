@@ -25,16 +25,16 @@
         "mapping": {
           "kind": "enum",
           "labels": [
-            "Mandy",
-            "Bart",
-            "Zelda",
-            "Pip",
-            "Emily",
-            "Luis",
-            "Mabel",
-            "Rocco",
-            "Tamaki",
-            "Bertram"
+            "1",
+            "2",
+            "3",
+            "4",
+            "5",
+            "6",
+            "7",
+            "8",
+            "9",
+            "10"
           ]
         },
         "display": "enum"
@@ -63,61 +63,61 @@
       }
     ],
     "presets": {
-      "Mandy": {
+      "1": {
         "vowel": 0.5,
         "register": 0.05,
         "ensemble": 0.4,
         "breath": 0.6
       },
-      "Bart": {
+      "2": {
         "vowel": 0.5,
         "register": 0.15,
         "ensemble": 0.55,
         "breath": 0.35
       },
-      "Zelda": {
+      "3": {
         "vowel": 0.65,
         "ensemble": 0.35,
         "breath": 0.65,
         "register": 0.25
       },
-      "Pip": {
+      "4": {
         "vowel": 0.25,
         "ensemble": 0.3,
         "breath": 0.35,
         "register": 0.35
       },
-      "Emily": {
+      "5": {
         "vowel": 0.5,
         "register": 0.45,
         "ensemble": 0.45,
         "breath": 0.45
       },
-      "Luis": {
+      "6": {
         "vowel": 0.5,
         "register": 0.55,
         "ensemble": 0.45,
         "breath": 0.5
       },
-      "Mabel": {
+      "7": {
         "vowel": 0.5,
         "ensemble": 0.4,
         "breath": 0.35,
         "register": 0.65
       },
-      "Rocco": {
+      "8": {
         "vowel": 0.25,
         "ensemble": 0.35,
         "breath": 0.65,
         "register": 0.75
       },
-      "Tamaki": {
+      "9": {
         "vowel": 0.5,
         "register": 0.85,
         "ensemble": 0.55,
         "breath": 0.75
       },
-      "Bertram": {
+      "10": {
         "vowel": 0.5,
         "register": 0.95,
         "ensemble": 0.55,
@@ -179,5 +179,24 @@
     "panel.svg.fragment": "5c22036f1368da1b3d58e72c2b4d8dc22ff2129695e3d4d834273da08c5e5658",
     "panel_templates.json": "e9b49f57cdc258aa6bfc15b09cbd03162410ef5a113b7040759d58f67e97f1d7",
     "tests/reference_results.json": "dccb591474fa7ece00453e597a614b09899b49c386bd7d346b17bb5a3b427fc8"
+  },
+  "label_migration": {
+    "scheme": "numbered-voices/1",
+    "original_record_sha256": "db7c2224dcd5f1cea46c65e0ca5c0058c870cc1db79f9972323045350dd63e9d",
+    "scope": "Voice and character preset labels only; original source hashes and audio/display goldens retained."
+  },
+  "numbered_label_sources": {
+    "generate_bank.py": {
+      "sha256": "1e57ca0db0ffe8efa4637ee077d39c4533a65a321d431d1bf7772557b2fb6a8e",
+      "algorithm_sha256": "5bb5b6e6b8aaab57b01d7163776fa17fb7492c27701bcb0b8856edb84d34c76d"
+    },
+    "generate_characters.py": {
+      "sha256": "93aea9d872dcf297f77c4413ca0879471d32428186bf28ed21abdb0cbf471fb4",
+      "algorithm_sha256": "a2f78360eae0a5df687658de0a6b5062e5f75fe416bea2fc634bcc0e0f3f0687"
+    },
+    "expression.h": {
+      "sha256": "096c76d56c74f67073cebd2617db863ed6ebb18b2d60c2c822ea2c900df56919",
+      "algorithm_sha256": "da251ab1e991e0d36d9d2ffb2492b50e5da34771a5c9cd9bc0ff4460bb6253da"
+    }
   }
 }

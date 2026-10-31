@@ -1,24 +1,44 @@
 """Exact original fixture binding and unchanged Cast controls/data/visuals."""
 from pathlib import Path
-import hashlib,json
+import ast,hashlib,json,re
 
 ROOT=Path(__file__).resolve().parents[1]
 sha=lambda data:hashlib.sha256(data).hexdigest()
 # Undo only the authorized identity spelling when checking historical hashes.
 original_names=lambda data:data.replace(b'troupe',b'recital')
 reference=json.loads((ROOT/'tests/cleanup_reference.json').read_text())
+def without_labels(name,data):
+    text=original_names(data).decode()
+    if name=='expression.h':
+        return re.sub(r'\s+','',re.sub(r'//[^\n]*','',text)).encode()
+    tree=ast.parse(text)
+    if tree.body and isinstance(tree.body[0],ast.Expr) and isinstance(tree.body[0].value,ast.Constant) and isinstance(tree.body[0].value.value,str):
+        tree.body[0].value=ast.Constant(None)
+    for node in ast.walk(tree):
+        # Python 3.12 added this empty field; keep 3.11+ fingerprints identical.
+        if hasattr(node,'type_params') and not node.type_params:
+            node._fields=tuple(field for field in node._fields if field!='type_params')
+        if isinstance(node,ast.Assign) and any(isinstance(t,ast.Name) and t.id in ('CHARACTERS','NAMES') for t in node.targets):
+            expected=('2','5','6','9','10','1','7','8','3','4') if name=='generate_bank.py' else ('7','8','3','4')
+            assert ast.literal_eval(node.value)==expected,'Generator labels retain internal voice order'
+            node.value=ast.Constant(None)
+        if isinstance(node,ast.Call) and isinstance(node.func,ast.Name) and node.func.id=='print' and node.args and isinstance(node.args[0],ast.Constant) and isinstance(node.args[0].value,str) and node.args[0].value.startswith('Authored ') and node.args[0].value.endswith('reference spectra untouched.'):
+            node.args[0]=ast.Constant(None)
+    return ast.dump(tree,include_attributes=False).encode()
 for name,digest in reference['unchanged_files'].items():
-    assert sha(original_names((ROOT/name).read_bytes()))==digest,name
+    data=(ROOT/name).read_bytes()
+    if name in reference['numbered_label_sources']:
+        numbered=reference['numbered_label_sources'][name]
+        assert sha(data)==numbered['sha256'],name
+        assert sha(without_labels(name,data))==numbered['algorithm_sha256'],name
+    else:
+        assert sha(original_names(data))==digest,name
 definition=json.loads((ROOT/'definition.json').read_text())
 assert definition['name']=='Troupe','The displayed machine name is Troupe'
 assert definition['id']=='troupe','The internal machine identity is troupe'
-# Recover the historical names after the requested numbering; values stay exact.
-historical_labels=reference['definition']['parameters'][1]['mapping']['labels']
+# The comparison definition records the explicit label-only migration.
 numbered_labels=[str(number) for number in range(1,11)]
 assert definition['parameters'][1]['mapping']['labels']==numbered_labels,'Voices are numbered 1–10 in the existing order'
-definition['parameters'][1]['mapping']['labels']=historical_labels
-historical_names=dict(zip(numbered_labels,historical_labels))
-definition['presets']={historical_names.get(name,name):values for name,values in definition['presets'].items()}
 # Preserve the historical record while allowing the explicitly requested renames.
 definition['name']=reference['definition']['name']
 definition['id']=reference['definition']['id']

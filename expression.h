@@ -7,8 +7,8 @@ struct CharacterExpression {
 };
 // Attack/fade steps are Q15 per 64-frame block. Vibrato rate is phase per
 // block; depth is a Q16 pitch ratio (40 ~ 1 cent, 850 ~ 22 cents).
-// Internal identity order: Bart, Emily, Luis, Tamaki, Bertram, Mandy,
-// Mabel, Rocco, Zelda, Pip. Original expression values remain exact.
+// Internal identity order: 2, 5, 6, 9, 10, 1,
+// 7, 8, 3, 4. Original expression values remain exact.
 // Attacks: 41, 70, 93, 81, 104, 26 ms. Note-start timing is latched;
 // changing character on a held note retains phase and smooths depth.
 const CharacterExpression character_expression[10]={

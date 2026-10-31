@@ -13,8 +13,8 @@ import numpy as np
 from spectra import load_spectra, save_spectra, spectra_digest
 
 FOLDER = Path(__file__).resolve().parent
-CHARACTERS = ('Bart', 'Emily', 'Luis', 'Tamaki', 'Bertram', 'Mandy',
-              'Mabel', 'Rocco', 'Zelda', 'Pip')
+CHARACTERS = ('2', '5', '6', '9', '10', '1',
+              '7', '8', '3', '4')
 
 
 def generate(magnitudes, source_phases, normalize_new=False):
