@@ -8,9 +8,9 @@ stock firmware are included.
 
 ## Demo
 
-[![Watch the 30-second Troupe demo](docs/media/troupe-demo.jpg)](docs/media/troupe-demo.mp4)
+[![Watch the 30-second Troupe demo](docs/media/troupe-demo.jpg)](docs/media/troupe-demo.mp4?raw=true)
 
-[Watch or download the demo](docs/media/troupe-demo.mp4) — 30 seconds, 1080p,
+[Download and play the demo](docs/media/troupe-demo.mp4?raw=true) — 30 seconds, 1080p,
 with synth audio recorded from the web preview. Hear voices 1–10, continuous
 vowel morphing, and the Cast blend while the singers animate.
 
