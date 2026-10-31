@@ -26,14 +26,13 @@ def load(name):
 
 def main():
     definition = json.loads((FOLDER / 'definition.json').read_text())
-    labels = ['Mandy', 'Bart', 'Zelda', 'Pip', 'Emily', 'Luis',
-              'Mabel', 'Rocco', 'Tamaki', 'Bertram']
+    labels = [str(number) for number in range(1, 11)]
     require(definition['parameters'][1]['mapping']['labels'] == labels, 'Requested paired logical order')
     for index, name in enumerate(labels):
-        require(int(definition['presets'][name]['register'] * 10) == index, 'Named presets select their own character')
-    require(int(definition['parameters'][1]['default'] * 10) == 5, 'Default remains Luis')
+        require(int(definition['presets'][name]['register'] * 10) == index, 'Numbered presets select their own character')
+    require(int(definition['parameters'][1]['default'] * 10) == 5, 'Default remains voice 6')
     for name in ('Low Oo', 'Solo Ah'):
-        require(int(definition['presets'][name]['register'] * 10) == 5, 'Existing utility presets remain Luis')
+        require(int(definition['presets'][name]['register'] * 10) == 5, 'Existing utility presets remain voice 6')
     contract = json.loads((FOLDER / 'tests/source_contract.json').read_text())
     for name in ('bank_0.h', 'bank_1.h', 'vocal_spectra_magnitudes.npy', 'vocal_spectra_source_phases.npy', 'display.cpp', 'effort.h'):
         require(hashlib.sha256((FOLDER / name).read_bytes()).hexdigest() == contract['files'][name],

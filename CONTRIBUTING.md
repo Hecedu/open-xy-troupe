@@ -33,15 +33,18 @@ regenerated integer waveform sample remain exact.
 uses the committed integer coefficients in `predictors.json`.
 
 The frozen fixture bindings recover the exact historical source bytes after
-undoing only the `troupe` namespace rename. Keep those bindings and audio/display
-golden values unchanged. `tests/cleanup_exact.cpp` compares 87,130,112 output
-samples, 4,454,400 prepared samples and 8,192 display frames against the preceding
+undoing only the `troupe` namespace rename. Label-only generator and comment
+changes retain their original source hashes and independently checked algorithm
+fingerprints in `tests/cleanup_reference.json`. Its definition uses numbered
+labels and records the hash of the original historical record. Keep the frozen
+bindings and audio/display golden values unchanged. `tests/cleanup_exact.cpp`
+compares 87,130,112 output samples, 4,454,400 prepared samples and 8,192 display frames against the preceding
 Cast renderer. Historical Ensemble workloads remain in `tests/legacy/`.
 
 Before publishing source, audit the staged tree and complete Git history for
 private firmware, archives, executable payloads, credentials and device records.
-Keep source-only audit reports outside this checkout. Publishing source for
-review is separate from tagging a hardware-qualified catalog release.
+Keep source-only audit reports outside this checkout. Source publication
+and catalog releases use separate workflows.
 
 Preserve parameter IDs, ordering, meanings and defaults after publication.
 Presets store normalized Voice values. Existing six-character Choir presets need

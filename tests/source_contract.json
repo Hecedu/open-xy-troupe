@@ -24,16 +24,16 @@
         "mapping": {
           "kind": "enum",
           "labels": [
-            "Mandy",
-            "Bart",
-            "Zelda",
-            "Pip",
-            "Emily",
-            "Luis",
-            "Mabel",
-            "Rocco",
-            "Tamaki",
-            "Bertram"
+            "1",
+            "2",
+            "3",
+            "4",
+            "5",
+            "6",
+            "7",
+            "8",
+            "9",
+            "10"
           ]
         },
         "display": "enum"
@@ -62,61 +62,61 @@
       }
     ],
     "presets": {
-      "Mandy": {
+      "1": {
         "vowel": 0.5,
         "register": 0.05,
         "ensemble": 0.4,
         "breath": 0.6
       },
-      "Bart": {
+      "2": {
         "vowel": 0.5,
         "register": 0.15,
         "ensemble": 0.55,
         "breath": 0.35
       },
-      "Zelda": {
+      "3": {
         "vowel": 0.65,
         "ensemble": 0.35,
         "breath": 0.65,
         "register": 0.25
       },
-      "Pip": {
+      "4": {
         "vowel": 0.25,
         "ensemble": 0.3,
         "breath": 0.35,
         "register": 0.35
       },
-      "Emily": {
+      "5": {
         "vowel": 0.5,
         "register": 0.45,
         "ensemble": 0.45,
         "breath": 0.45
       },
-      "Luis": {
+      "6": {
         "vowel": 0.5,
         "register": 0.55,
         "ensemble": 0.45,
         "breath": 0.5
       },
-      "Mabel": {
+      "7": {
         "vowel": 0.5,
         "ensemble": 0.4,
         "breath": 0.35,
         "register": 0.65
       },
-      "Rocco": {
+      "8": {
         "vowel": 0.25,
         "ensemble": 0.35,
         "breath": 0.65,
         "register": 0.75
       },
-      "Tamaki": {
+      "9": {
         "vowel": 0.5,
         "register": 0.85,
         "ensemble": 0.55,
         "breath": 0.75
       },
-      "Bertram": {
+      "10": {
         "vowel": 0.5,
         "register": 0.95,
         "ensemble": 0.55,
@@ -178,9 +178,9 @@
     "display.h": "5097c7cd0289ddc1f1ea83d70c777d1a9b9dfb09f5930dc16f3182b02845a9de",
     "effort.h": "b8ca8c964b52c976b9ca6c6acbba315e097a979b160e687d373572e476d0dc3f",
     "engine.cpp": "d28d18147accc1eb501ef854f66df39c68aa8afbe6d166b28a092adc5cf07b17",
-    "expression.h": "5d97526d7128ed6e1c10c57815a0ff675fe0a2c6065ae1b27a016bd800108c9f",
-    "generate_bank.py": "a3dc139614b2b868c97f584ab9d8366310573f61d24555174ea62e7796ed10b0",
-    "generate_characters.py": "44bbe37a4c1c10830d95353bc39d9804628d8b8911083560cbaff76428b9b526",
+    "expression.h": "096c76d56c74f67073cebd2617db863ed6ebb18b2d60c2c822ea2c900df56919",
+    "generate_bank.py": "1e57ca0db0ffe8efa4637ee077d39c4533a65a321d431d1bf7772557b2fb6a8e",
+    "generate_characters.py": "93aea9d872dcf297f77c4413ca0879471d32428186bf28ed21abdb0cbf471fb4",
     "generate_panel.py": "01792ebc4a7d688600b369b8d269071264152a3c70fff728525505f6a771fc47",
     "pack_bank.py": "895825f3e03deefe368578e516f5c4007e200a761715c577d961f4d991f27f63",
     "panel.svg.fragment": "87a4a11f7ffb6a3e5110f4b212fcff6b510700a12e96f615c41ac2a3a5a18f35",

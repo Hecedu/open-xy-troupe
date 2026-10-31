@@ -11,14 +11,14 @@ stock firmware are included.
 | Control | Behavior |
 | --- | --- |
 | Vowel | Morphs continuously through five vowel anchors and matching mouths. |
-| Voice | Selects Mandy, Bart, Zelda, Pip, Emily, Luis, Mabel, Rocco, Tamaki or Bertram. |
+| Voice | Selects voices 1–10 in their existing character order. |
 | Cast | Blends four complementary vocal characters into the lead; their figures fade in with the blend. |
 | Effort | Changes vocal brightness and projection. |
 
-Luis is the default voice. Twelve presets provide one starting point for each
-character, plus **Low Oo** and **Solo Ah**. Notes have character-specific
-attacks, delayed vibrato, independent drift and shaped aspiration. The SDK and
-device own amplitude envelopes and note releases.
+Voice 6 is the default. Twelve presets provide one starting point for each
+numbered voice (**1**–**10**), plus **Low Oo** and **Solo Ah**. Notes have
+character-specific attacks, delayed vibrato, independent drift and shaped
+aspiration. The SDK and device own amplitude envelopes and note releases.
 
 The five figures form a depth-scaled arc. Held notes drive sway and delayed eye
 closure; the last release returns the pose to rest independently of the audio
@@ -27,33 +27,28 @@ aligned. Selecting a page or another track starts a 200 ms center-out entrance
 when the SDK supplies display activation resets. Reduced motion settles the
 formation immediately and removes sway.
 
-## Review status
+## Validation and SDK
 
-This repository is available for source review; it is not a catalog release.
-The Troupe rename passed 13 C++ host tests, six machine-owned Python checks,
-and browser ABI/render smoke checks using the public SDK revision below.
-Its controls, presets, authored audio data and animation match the preceding
-Recital source except for the machine identity. Hardware stability and CPU
-measurements for a committed Troupe revision remain pending.
+The numbered build at commit `0361d82` passed 13 C++ host tests, six
+machine-owned Python checks, browser ABI/render smoke checks, and firmware
+source-rebuild and package-hash checks. GitHub CI also passed the machine
+checks on Linux and native module compilation on Windows. The user confirmed
+that this numbered build is installed and stable on the OP-XY.
 
-The workflow pins public SDK commit
+CI pins public SDK commit
 [`153c826`](https://github.com/Hecedu/open-xy/commit/153c826218affa021c34cc00603b5e887362b45d):
-upstream OS 1.2.1 staging `c0e5ab6` plus two separate SDK contributions:
+upstream OS 1.2.1 staging `c0e5ab6` plus two SDK contributions:
 
 - [Fixed 2 MiB browser memory](https://github.com/etcetc000/open-xy/pull/138),
   with growth disabled. The normal preview and machine-test commands use this
-  allowance directly; no local Python runner or memory override is required.
+  allowance directly.
 - [Display activation reset](https://github.com/etcetc000/open-xy/pull/139),
   which resets native drawing state when an owned page is selected or its track
-  changes, preserving the page's entrance behavior. This PR remains a draft
-  pending native release qualification.
+  changes, preserving the page's entrance behavior.
 
-Troupe's host/reference checks, browser preview and native module compile pass
-against this OS 1.2.1 SDK. The module occupies 1,016,316 bytes (about 992.5 KiB)
-of the 2040 KiB collection region with the pinned macOS tools. This is a host
-compile result. Full firmware reconstruction, Windows release qualification,
-hardware stability and CPU profiling remain pending. The approved older
-reference and its original SDK are retained separately without modification.
+The installed numbered build used preserved SDK revision `99449562` and its
+matching toolchain. Hardware references and their complete build provenance
+are retained privately.
 
 ## Develop and audition
 

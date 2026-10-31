@@ -74,7 +74,7 @@ static void voice_transition_checks() {
     settled_reset(state); troupe::display(state,input,frame);
     const troupe::Frame original=frame;
     require(state.look_weights[0]==1024,"Initial character appears immediately without a startup fade");
-    input.slots[1]=107374182; // Mandy, artwork 5.
+    input.slots[1]=107374182; // 1, artwork 5.
     troupe::display(state,input,frame);
     require(state.look_weights[0]==1024 && state.look_weights[5]==0 &&
             same_transform(frame.nodes[85],original.nodes[85]) && frame.nodes[85].shade==12,
