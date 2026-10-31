@@ -12,11 +12,18 @@ for name,digest in reference['unchanged_files'].items():
 definition=json.loads((ROOT/'definition.json').read_text())
 assert definition['name']=='Troupe','The displayed machine name is Troupe'
 assert definition['id']=='troupe','The internal machine identity is troupe'
-# Preserve the historical record while allowing the explicitly requested rename.
+# Recover the historical names after the requested numbering; values stay exact.
+historical_labels=reference['definition']['parameters'][1]['mapping']['labels']
+numbered_labels=[str(number) for number in range(1,11)]
+assert definition['parameters'][1]['mapping']['labels']==numbered_labels,'Voices are numbered 1–10 in the existing order'
+definition['parameters'][1]['mapping']['labels']=historical_labels
+historical_names=dict(zip(numbered_labels,historical_labels))
+definition['presets']={historical_names.get(name,name):values for name,values in definition['presets'].items()}
+# Preserve the historical record while allowing the explicitly requested renames.
 definition['name']=reference['definition']['name']
 definition['id']=reference['definition']['id']
 definition['resources']['sharedBytes']=reference['definition']['resources']['sharedBytes']
-assert definition==reference['definition'],'Only the name, ID and declared shared-state size may change'
+assert definition==reference['definition'],'Only identity, voice/preset labels and declared shared-state size may change'
 for name,entry in json.loads((ROOT/'tests/frozen/bindings.json').read_text()).items():
     data=original_names((ROOT/'tests/frozen'/name).read_bytes())
     if entry['transformed']:

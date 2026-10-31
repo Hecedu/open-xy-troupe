@@ -11,14 +11,14 @@ stock firmware are included.
 | Control | Behavior |
 | --- | --- |
 | Vowel | Morphs continuously through five vowel anchors and matching mouths. |
-| Voice | Selects Mandy, Bart, Zelda, Pip, Emily, Luis, Mabel, Rocco, Tamaki or Bertram. |
+| Voice | Selects voices 1–10 in their existing character order. |
 | Cast | Blends four complementary vocal characters into the lead; their figures fade in with the blend. |
 | Effort | Changes vocal brightness and projection. |
 
-Luis is the default voice. Twelve presets provide one starting point for each
-character, plus **Low Oo** and **Solo Ah**. Notes have character-specific
-attacks, delayed vibrato, independent drift and shaped aspiration. The SDK and
-device own amplitude envelopes and note releases.
+Voice 6 is the default. Twelve presets provide one starting point for each
+numbered voice (**1**–**10**), plus **Low Oo** and **Solo Ah**. Notes have
+character-specific attacks, delayed vibrato, independent drift and shaped
+aspiration. The SDK and device own amplitude envelopes and note releases.
 
 The five figures form a depth-scaled arc. Held notes drive sway and delayed eye
 closure; the last release returns the pose to rest independently of the audio

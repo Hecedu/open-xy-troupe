@@ -24,16 +24,16 @@
         "mapping": {
           "kind": "enum",
           "labels": [
-            "Mandy",
-            "Bart",
-            "Zelda",
-            "Pip",
-            "Emily",
-            "Luis",
-            "Mabel",
-            "Rocco",
-            "Tamaki",
-            "Bertram"
+            "1",
+            "2",
+            "3",
+            "4",
+            "5",
+            "6",
+            "7",
+            "8",
+            "9",
+            "10"
           ]
         },
         "display": "enum"
@@ -62,61 +62,61 @@
       }
     ],
     "presets": {
-      "Mandy": {
+      "1": {
         "vowel": 0.5,
         "register": 0.05,
         "ensemble": 0.4,
         "breath": 0.6
       },
-      "Bart": {
+      "2": {
         "vowel": 0.5,
         "register": 0.15,
         "ensemble": 0.55,
         "breath": 0.35
       },
-      "Zelda": {
+      "3": {
         "vowel": 0.65,
         "ensemble": 0.35,
         "breath": 0.65,
         "register": 0.25
       },
-      "Pip": {
+      "4": {
         "vowel": 0.25,
         "ensemble": 0.3,
         "breath": 0.35,
         "register": 0.35
       },
-      "Emily": {
+      "5": {
         "vowel": 0.5,
         "register": 0.45,
         "ensemble": 0.45,
         "breath": 0.45
       },
-      "Luis": {
+      "6": {
         "vowel": 0.5,
         "register": 0.55,
         "ensemble": 0.45,
         "breath": 0.5
       },
-      "Mabel": {
+      "7": {
         "vowel": 0.5,
         "ensemble": 0.4,
         "breath": 0.35,
         "register": 0.65
       },
-      "Rocco": {
+      "8": {
         "vowel": 0.25,
         "ensemble": 0.35,
         "breath": 0.65,
         "register": 0.75
       },
-      "Tamaki": {
+      "9": {
         "vowel": 0.5,
         "register": 0.85,
         "ensemble": 0.55,
         "breath": 0.75
       },
-      "Bertram": {
+      "10": {
         "vowel": 0.5,
         "register": 0.95,
         "ensemble": 0.55,
